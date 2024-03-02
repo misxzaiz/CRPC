@@ -26,14 +26,14 @@ public class CrpcConfigUtils {
 
             // 安全地获取并转换"CRPC"配置
             @SuppressWarnings("unchecked")
-            Map<String, Object> crpc = (Map<String, Object>) data.get("CRPC");
+            Map<String, Object> crpc = (Map<String, Object>) data.get("crpc");
             if (crpc == null) {
-                throw new IOException("CRPC configuration not found in the YAML file.");
+                throw new IOException("在YML文件中找不到CRPC配置。");
             }
 
             return crpc;
         } catch (IOException e) {
-            throw new IOException("Failed to load or parse the application configuration.", e);
+            throw new IOException("加载或解析应用程序配置失败", e);
         }
     }
 }
