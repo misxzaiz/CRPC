@@ -1,33 +1,36 @@
-package chen.shangquan.utils;
+package chen.shangquan.utils.object;
+
+import chen.shangquan.utils.type.ClassTypeUtils;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ObjectResolution {
-    public static final String INDENTATION = "\t";
-    public static String PREFIX = "";
-    public static final String RIGHT_BRACKET = "】";
-    public static final String LEFT_BRACKET = "【";
-    public static final String MARKER = "\"";
-    public static final String COLON = ":";
-    public static final String OPEN_BRACE = "{";
-    public static final String CLOSE_BRACE = "}";
-    public static final char NEW_LINE = '\n';
-    public static final String COMMA = ",";
-    public static final String OPEN_ANGLE_BRACKET = "<";
-    public static final String CLOSE_ANGLE_BRACKET = ">";
-    public static final String OPEN_SQUARE_BRACKET = "[";
-    public static final String CLOSE_SQUARE_BRACKET = "]";
+    private static final String INDENTATION = "\t";
+    private static String PREFIX = "";
+    private static final String RIGHT_BRACKET = "】";
+    private static final String LEFT_BRACKET = "【";
+    private static final String MARKER = "\"";
+    private static final String COLON = ":";
+    private static final String OPEN_BRACE = "{";
+    private static final String CLOSE_BRACE = "}";
+    private static final char NEW_LINE = '\n';
+    private static final String COMMA = ",";
+    private static final String OPEN_ANGLE_BRACKET = "<";
+    private static final String CLOSE_ANGLE_BRACKET = ">";
+    private static final String OPEN_SQUARE_BRACKET = "[";
+    private static final String CLOSE_SQUARE_BRACKET = "]";
 
-    public static final LinkedList<String> BRACKETS_STACK = new LinkedList<>();
+    private static final LinkedList<String> BRACKETS_STACK = new LinkedList<>();
 
-    public static boolean lastIsNewline(StringBuilder sb) {
+    private static boolean lastIsNewline(StringBuilder sb) {
         return sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n';
     }
 
-    public static StringBuilder analysisClassDetail(Class<?> tClass, StringBuilder cson) throws ClassNotFoundException {
+    private static StringBuilder analysisClassDetail(Class<?> tClass, StringBuilder cson) throws ClassNotFoundException {
         // 基本类型 & 引用类型
         if (ClassTypeUtils.isBaseType(tClass) && !lastIsNewline(cson)) {
             cson.append(LEFT_BRACKET).append(tClass.getSimpleName()).append(RIGHT_BRACKET).append(COLON).append(MARKER).append("0").append(MARKER).append(COMMA).append(NEW_LINE);
@@ -73,17 +76,15 @@ public class ObjectResolution {
                         if (tClass.getSimpleName().equals(typeClass.getSimpleName())) {
                             cson = new StringBuilder(cson.substring(0, cson.length() - 1));
                             cson.append("递归").append(BRACKETS_STACK.pop()).append(COMMA).append(NEW_LINE);
-                            PREFIX = PREFIX.substring(0, PREFIX.length() - 1);
-                            // 避免重复引用
-                            PREFIX = PREFIX.substring(0, PREFIX.length() - 1);
-                            cson.append(PREFIX).append(BRACKETS_STACK.pop()).append(COMMA).append(NEW_LINE);
-                            PREFIX = PREFIX.substring(0, PREFIX.length() - 1);
-                            cson.append(PREFIX).append(BRACKETS_STACK.pop()).append(COMMA).append(NEW_LINE);
+                            if (PREFIX.length() >= 1) {
+                                PREFIX = PREFIX.substring(0, PREFIX.length() - 1);
+                            }
+
                             if (BRACKETS_STACK.size() > 0) {
                                 String pop = BRACKETS_STACK.pop();
                                 selfUserNewLine(cson,pop);
                             }
-                            return cson;
+                            continue;
                         }
                         cson = analysisClassDetail(typeClass, cson);
                         continue;
@@ -95,15 +96,11 @@ public class ObjectResolution {
                 // 自引用
                 if (tClass.getSimpleName().equals(fieldClass.getSimpleName())) {
                     cson.append(LEFT_BRACKET).append(fieldClass.getSimpleName()).append(RIGHT_BRACKET).append(OPEN_BRACE).append("递归").append(CLOSE_BRACE).append(COMMA).append(NEW_LINE);
-                    PREFIX = PREFIX.substring(0, PREFIX.length() - 1);
-                    cson.append(PREFIX).append(BRACKETS_STACK.pop()).append(COMMA).append(NEW_LINE);
-                    PREFIX = PREFIX.substring(0, PREFIX.length() - 1);
-                    cson.append(PREFIX).append(BRACKETS_STACK.pop()).append(COMMA).append(NEW_LINE);
                     if (BRACKETS_STACK.size() > 0) {
                         String pop = BRACKETS_STACK.pop();
                         selfUserNewLine(cson,pop);
                     }
-                    return cson;
+                    continue;
                 }
                 // Object
                 if (ClassTypeUtils.isObjectType(fieldClass)) {
@@ -114,9 +111,14 @@ public class ObjectResolution {
                 // 其他类型
                 cson = analysisClassDetail(fieldClass, cson);
             }
-
-            PREFIX = PREFIX.substring(0, PREFIX.length() - 1);
-            cson.append(PREFIX).append(BRACKETS_STACK.pop()).append(COMMA).append(NEW_LINE);
+            if (PREFIX.length() >= 1) {
+                PREFIX = PREFIX.substring(0, PREFIX.length() - 1);
+            }
+            try {
+                cson.append(PREFIX).append(BRACKETS_STACK.pop()).append(COMMA).append(NEW_LINE);
+            } catch (NoSuchElementException e) {
+                cson.append(PREFIX).append("【pop is null】").append(COMMA).append(NEW_LINE);
+            }
         }
         return cson;
     }
@@ -159,7 +161,7 @@ public class ObjectResolution {
         return removeLastComma(cson.toString());
     }
 
-    public static String removeLastComma(String str) {
+    private static String removeLastComma(String str) {
         if (str != null && str.length() > 0) {
             int lastIndex = str.lastIndexOf(",");
             if (lastIndex >= 0) {
@@ -177,6 +179,20 @@ public class ObjectResolution {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(cson);
         String result = matcher.replaceAll("");
-        return result.replace("递归","");
+
+        String regex1 = "【[^】]+】";
+        Pattern pattern1 = Pattern.compile(regex1);
+        Matcher matcher1 = pattern1.matcher(result);
+        String result1 = matcher1.replaceAll("");
+        return result1.replace("递归","");
+    }
+
+    public static String getObjectResolution(Class<?> tClass) {
+        try {
+            String cson = analysisClassDetail(tClass);
+            return removeBrackets(cson);
+        } catch (ClassNotFoundException e) {
+            return "";
+        }
     }
 }
