@@ -1,0 +1,6 @@
+crpc:
+  name: CrpcTest
+  ip: 127.0.0.1
+  port: 8001
+  weight: 5
+  area: GD
