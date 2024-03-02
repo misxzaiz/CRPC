@@ -78,3 +78,14 @@ public class F {
 |  String generateUniqueIdHex()   | 生成 String 类型 16 进制 ID |
 | String generateUniqueIdBinary() | 生成 String 类型 2 进制 ID  |
 |    String generateUniqueId()    | 生成 String 类型 10 进制 ID |
+
+### 四、balance 负载均很
+
+> 确定唯一服务的标识 ip + port  
+> 权重负载均衡 weight  
+> 区域负载均衡 area  
+
+接口：LoadBalancing  
+方法：String loadBalancing(); 获取服务标识  
+实现类（1）：RandomLoadbalancing 随机负载均衡  
+实现类（2）：WeightLoadBalancing 基于权重的负载均衡
