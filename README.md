@@ -6,7 +6,7 @@
 
 ## crpc-common：公共模块
 
-### ObjectResolution 对象解析器
+### 一、ObjectResolution 对象解析器
 
 > 主要时通过反射将对象解析为 json 格式，在 CRPC 客户端服务测试时使用
 
@@ -59,3 +59,22 @@ public class F {
 
 1. 两个对象相互调用时，会导致无限递归，需要处理  
 > 思路1：使用全路径记录对象是否已经使用过，但是这样会导致解析结果变少
+
+### 二、CrpcConfigUtils Application.yml 解析
+
+> 解析 application.yml 获取 CRPC 配置信息
+
+### 三、UniqueIdGenerator 唯一 ID 生成器
+
+> 最多支持 32 个节点 （0 - 31）
+> 每个节点每毫秒最多生成 4096 个 ID
+
+方法  
+
+|               方法                |          说明           |  
+|:-------------------------------:|:---------------------:|  
+| void setWorkerId(long workerId) |      设置机器码（0-31）      |
+|  String generateUniqueIdLong()  |  生成 Long 类型 10 进制 ID  |
+|  String generateUniqueIdHex()   | 生成 String 类型 16 进制 ID |
+| String generateUniqueIdBinary() | 生成 String 类型 2 进制 ID  |
+|    String generateUniqueId()    | 生成 String 类型 10 进制 ID |
