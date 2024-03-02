@@ -9,8 +9,8 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>crpc-center-server</module>
         <module>crpc-common</module>
+        <module>crpc-server</module>
     </modules>
 
     <properties>
