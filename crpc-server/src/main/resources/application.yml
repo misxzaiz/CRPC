@@ -1,0 +1,9 @@
+server:
+  port: 8000
+
+crpc:
+  name: C-RPC-Client
+  ip: 127.0.0.1
+  port: 7999
+  area: GD
+  weight: 5
