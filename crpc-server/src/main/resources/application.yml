@@ -2,7 +2,7 @@ server:
   port: 8000
 
 crpc:
-  name: C-RPC-Client
+  name: CrpcServer
   ip: 127.0.0.1
   port: 7999
   area: GD

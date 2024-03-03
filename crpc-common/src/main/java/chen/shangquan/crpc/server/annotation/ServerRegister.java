@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 public @interface ServerRegister {
     String serverName() default "";
     String className();
-    String version();
+    String version() default "V1";
 }
 

@@ -7,6 +7,8 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 
+import java.util.List;
+
 public class CuratorClient {
 
     private static volatile CuratorFramework CLIENT = null;
@@ -87,5 +89,9 @@ public class CuratorClient {
 
     public static Void delete(String path) throws Exception {
         return CLIENT.delete().forPath(path);
+    }
+
+    public static List<String> getChildren(String path) throws Exception {
+        return CLIENT.getChildren().forPath(path);
     }
 }

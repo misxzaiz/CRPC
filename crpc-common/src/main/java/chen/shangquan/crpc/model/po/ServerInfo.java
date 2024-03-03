@@ -39,4 +39,7 @@ public class ServerInfo implements Serializable {
      * 类列表
      */
     private List<ClassInfo> classList;
+    public ServerInfo(String serverName) {
+        this.name = serverName;
+    }
 }

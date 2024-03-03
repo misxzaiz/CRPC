@@ -116,3 +116,45 @@ CrpcRegisterCenter 方法
 
 1. ServerMap Bean 存储
 2. ServerInvoke Bean 调用
+
+### 八、RPC 服务注册
+
+```java
+@Component("CenterService")
+@ServerRegister(className = "CenterService", 
+        version = "V1")
+public class CenterService {
+
+}
+```
+
+### 九、RPC 服务调用（Java）
+
+```java
+@ServerRegister(serverName = "CrpcServer", 
+        className = "CenterService", 
+        version = "V1")
+public interface CenterService {
+}
+```
+
+```java
+CenterService centerService = ServiceAgent
+        .createService(CenterService.class);
+```
+
+### 八、RPC 服务调用（HTTP）
+
+> {http/https}://{ip}:{port}
+
+```json
+{
+    "id": 0,
+    "token": "",
+    "serverName": "",
+    "className": "",
+    "methodName": "",
+    "data": {}
+}
+```
+

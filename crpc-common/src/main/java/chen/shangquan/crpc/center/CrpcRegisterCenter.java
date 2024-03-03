@@ -1,11 +1,14 @@
 package chen.shangquan.crpc.center;
 
 import chen.shangquan.crpc.center.zookeeper.CuratorClient;
+import chen.shangquan.crpc.constant.CrpcConstant;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
+
+import java.util.List;
 
 public class CrpcRegisterCenter {
     public static String getNameSpace() {
@@ -55,5 +58,9 @@ public class CrpcRegisterCenter {
 
     public static void delete(String path) throws Exception {
         CuratorClient.delete(path);
+    }
+
+    public static List<String> getChildren(String path) throws Exception {
+        return CuratorClient.getChildren(path);
     }
 }
