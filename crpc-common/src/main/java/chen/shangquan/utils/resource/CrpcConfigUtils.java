@@ -1,5 +1,6 @@
 package chen.shangquan.utils.resource;
 
+import chen.shangquan.crpc.model.po.ServerInfo;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.FileCopyUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -35,5 +36,18 @@ public class CrpcConfigUtils {
         } catch (IOException e) {
             throw new IOException("加载或解析应用程序配置失败", e);
         }
+    }
+
+    public static ServerInfo getServerInfo() throws IOException {
+        Map<String, Object> crpc = getCrpcConfig();
+        ServerInfo server = new ServerInfo();
+        server.setName((String) crpc.get("name"));
+        server.setIp((String) crpc.get("ip"));
+        Integer port = (Integer) crpc.get("port");
+        server.setPort(port);
+        server.setArea((String) crpc.get("area"));
+        Integer weight = (Integer) crpc.get("weight");
+        server.setWeight(weight);
+        return server;
     }
 }
