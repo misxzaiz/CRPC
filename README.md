@@ -5,7 +5,7 @@
 3. crpc-common: 公共模块
 ## crpc-client: 客户端
 
-![CRPC控制台](/images/CRPC控制台.png)
+![CRPC控制台](./images/CRPC控制台.png)
 
 ## crpc-common：公共模块
 
