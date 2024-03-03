@@ -15,28 +15,21 @@ import java.util.Arrays;
 public class ServerInvoke {
     public static RpcResponse invoke(RpcRequest request) throws InvocationTargetException, IllegalAccessException {
         Object bean = ServerMap.get(request.getClassName(), request.getVersion());
-        Class<?> aClass = bean.getClass();
-        Method[] declaredMethods = aClass.getDeclaredMethods();
-        // 这里不允许方法重名
+        Method[] declaredMethods = bean.getClass().getDeclaredMethods();
         Method method = Arrays.stream(declaredMethods).filter(e -> e.getName().equals(request.getMethodName())).findFirst().get();
         Class<?>[] parameterTypes = method.getParameterTypes();
         Object data = null;
+        // 没有参数
         if (parameterTypes.length == 0) {
             data = method.invoke(bean);
         } else {
             Object o = null;
             try {
+                // 参数为 object
                 o = JSONUtil.toBean((String)request.getData(), parameterTypes[0]);
             } catch (JSONException e) {
-                String simpleName = parameterTypes[0].getSimpleName();
-                o = switch (simpleName) {
-                    case "String" -> String.valueOf(request.getData());
-                    case "Integer" -> Integer.valueOf((String) request.getData());
-                    case "Long" -> Long.valueOf((String) request.getData());
-                    case "Double" -> Double.valueOf((String) request.getData());
-                    case "Boolean" -> Boolean.valueOf((String) request.getData());
-                    default -> o;
-                };
+                // 参数为基本数据类型
+                o = getObject(request.getData(), o, parameterTypes[0].getSimpleName());
             } catch (ClassCastException e) {
                 try {
                     JSONObject jsonObject = (JSONObject) request.getData();
@@ -51,15 +44,7 @@ public class ServerInvoke {
                         }
                     }
                 } catch (ClassCastException e1) {
-                    String simpleName = parameterTypes[0].getSimpleName();
-                    o = switch (simpleName) {
-                        case "String" -> String.valueOf(request.getData());
-                        case "Integer" -> Integer.valueOf(String.valueOf(request.getData()));
-                        case "Long" -> Long.valueOf(String.valueOf(request.getData()));
-                        case "Double" -> Double.valueOf(String.valueOf(request.getData()));
-                        case "Boolean" -> Boolean.valueOf(String.valueOf(request.getData()));
-                        default -> o;
-                    };
+                    o = getObject(request.getData(), o, parameterTypes[0].getSimpleName());
                 }
             } catch (IllegalArgumentException illegalArgumentException) {
                 return RpcResponse.builder().id(request.getId()).code(400).message("参数不合法").build();
@@ -67,10 +52,21 @@ public class ServerInvoke {
             try {
                 data = method.invoke(bean, o);
             } catch (Throwable e) {
-                throw new RuntimeException();
+                return RpcResponse.builder().id(request.getId()).code(400).message("服务执行异常").build();
             }
-
         }
         return RpcResponse.builder().id(request.getId()).code(200).data(data).message("OK").build();
+    }
+
+    private static Object getObject(Object data, Object o, String simpleName) {
+        o = switch (simpleName) {
+            case "String" -> String.valueOf(data);
+            case "Integer" -> Integer.valueOf((String) data);
+            case "Long" -> Long.valueOf((String) data);
+            case "Double" -> Double.valueOf((String) data);
+            case "Boolean" -> Boolean.valueOf((String) data);
+            default -> o;
+        };
+        return o;
     }
 }
