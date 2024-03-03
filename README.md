@@ -89,3 +89,20 @@ public class F {
 方法：String loadBalancing(); 获取服务标识  
 实现类（1）：RandomLoadbalancing 随机负载均衡  
 实现类（2）：WeightLoadBalancing 基于权重的负载均衡
+
+### 五、CrpcRegisterCenter 服务注册中心
+
+CrpcRegisterCenter 方法
+
+| 方法 | 说明 |
+| :--: | :--: |
+| static void connect(String... connectStrings) | 连接注册中心 |
+| static void close() | 关闭注册中心 |
+| static String create(String path, byte[] data, CreateMode createMode) | 创建节点 |
+| static void update(String path, byte[] data) | 更新节点 |
+| static byte[] get(String path) | 获取节点信息 |
+| static Stat checkExists(String path) | 检查节点是否存在 |
+| static Void delete(String path) | 删除节点 |
+
+> Stat CreateMode Void 等应改为自定义信息，不然后期不好拓展  
+> CuratorListener 监听节点变化

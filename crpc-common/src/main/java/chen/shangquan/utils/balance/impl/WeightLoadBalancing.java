@@ -13,7 +13,7 @@ public class WeightLoadBalancing implements LoadBalancing {
     private List<Node> nodeList = new ArrayList<>();
 
     private final AtomicInteger index = new AtomicInteger(0);
-    // 维护一个 int[] 、 byte[] 代替 List<Integer> 会使用更少的空间吧
+
     private final List<Integer> executionOrder = new ArrayList<>();
 
     private class Node {
