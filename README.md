@@ -106,3 +106,13 @@ CrpcRegisterCenter 方法
 
 > Stat CreateMode Void 等应改为自定义信息，不然后期不好拓展  
 > CuratorListener 监听节点变化
+
+### 六、NetWork
+
+1. NettyServer Netty服务
+2. RpcRequest & RpcResponse CRPC 请求和响应
+
+### 七、ServerMap & ServerInvoke
+
+1. ServerMap Bean 存储
+2. ServerInvoke Bean 调用
