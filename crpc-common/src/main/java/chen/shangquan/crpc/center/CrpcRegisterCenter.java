@@ -29,34 +29,31 @@ public class CrpcRegisterCenter {
     }
 
     public static void close() {
-        CuratorClient.getClient().close();
+        CuratorClient.close();
     }
 
-    public static String create(String path, CreateMode createMode) throws Exception {
-        return CuratorClient.getClient().create().creatingParentsIfNeeded()
-                .withMode(createMode)
-                .forPath(path);
+    public static String createTemporaryOrder(String path) throws Exception {
+        return CuratorClient.create(path, CreateMode.EPHEMERAL_SEQUENTIAL);
     }
 
-    public static String create(String path, byte[] data, CreateMode createMode) throws Exception {
-        return CuratorClient.getClient().create().creatingParentsIfNeeded()
-                .withMode(createMode)
-                .forPath(path, data);
+    public static String createTemporaryOrder(String path, byte[] data) throws Exception {
+        return CuratorClient.create(path, data, CreateMode.EPHEMERAL_SEQUENTIAL);
     }
 
     public static void update(String path, byte[] data) throws Exception {
-        CuratorClient.getClient().setData().forPath(path, data);
+        CuratorClient.update(path, data);
     }
 
     public static byte[] get(String path) throws Exception {
-        return CuratorClient.getClient().getData().forPath(path);
+        return CuratorClient.get(path);
     }
 
-    public static Stat checkExists(String path) throws Exception {
-        return CuratorClient.getClient().checkExists().forPath(path);
+    public static boolean checkExists(String path) throws Exception {
+        Stat stat = CuratorClient.checkExists(path);
+        return stat != null;
     }
 
-    public static Void delete(String path) throws Exception {
-        return CuratorClient.getClient().delete().forPath(path);
+    public static void delete(String path) throws Exception {
+        CuratorClient.delete(path);
     }
 }

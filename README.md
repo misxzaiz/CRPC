@@ -94,15 +94,15 @@ public class F {
 
 CrpcRegisterCenter 方法
 
-| 方法 | 说明 |
-| :--: | :--: |
-| static void connect(String... connectStrings) | 连接注册中心 |
-| static void close() | 关闭注册中心 |
-| static String create(String path, byte[] data, CreateMode createMode) | 创建节点 |
-| static void update(String path, byte[] data) | 更新节点 |
-| static byte[] get(String path) | 获取节点信息 |
-| static Stat checkExists(String path) | 检查节点是否存在 |
-| static Void delete(String path) | 删除节点 |
+|                              方法                              |    说明    |
+|:------------------------------------------------------------:|:--------:|
+|        static void connect(String... connectStrings)         |  连接注册中心  |
+|                     static void close()                      |  关闭注册中心  |
+| static String createTemporaryOrder(String path, byte[] data) |  创建临时节点  |
+|         static void update(String path, byte[] data)         |   更新节点   |
+|                static byte[] get(String path)                |  获取节点信息  |
+|             static boolean checkExists(String path)              | 检查节点是否存在 |
+|               static void delete(String path)                |   删除节点   |
 
 > Stat CreateMode Void 等应改为自定义信息，不然后期不好拓展  
 > CuratorListener 监听节点变化
