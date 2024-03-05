@@ -1,5 +1,6 @@
 package chen.shangquan.utils.balance.impl;
 
+import chen.shangquan.crpc.model.po.ServerInfo;
 import chen.shangquan.utils.balance.LoadBalancing;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class WeightLoadBalancing implements LoadBalancing {
 
-    private List<Node> nodeList = new ArrayList<>();
+    private List<ServerInfo> list;
 
     private final AtomicInteger index = new AtomicInteger(0);
 
@@ -25,13 +26,8 @@ public class WeightLoadBalancing implements LoadBalancing {
      * key：mark：ip + port
      * value：weight
      */
-    public WeightLoadBalancing(Map<String, Integer> map) {
-        map.forEach((key, value) -> {
-            Node node = new Node();
-            node.mark = key;
-            node.weight = value;
-            nodeList.add(node);
-        });
+    public WeightLoadBalancing(List<ServerInfo> list) {
+        this.list = list;
         setExecutionOrder();
     }
 
@@ -39,10 +35,10 @@ public class WeightLoadBalancing implements LoadBalancing {
         Map<Integer, Integer> serviceCalls = new HashMap<>();
         // 计算总权重
         int totalWeight = 0;
-        for (int i = 0; i < nodeList.size(); i++) {
-            Node server = nodeList.get(i);
-            serviceCalls.put(i, server.weight);
-            totalWeight += server.weight;
+        for (int i = 0; i < list.size(); i++) {
+            ServerInfo server = list.get(i);
+            serviceCalls.put(i, server.getWeight());
+            totalWeight += server.getWeight();
         }
         // 循环生成执行顺序
         for (int i = 0; i < totalWeight; i++) {
@@ -69,11 +65,11 @@ public class WeightLoadBalancing implements LoadBalancing {
     }
 
     @Override
-    public String loadBalancing() {
+    public ServerInfo loadBalancing() {
         int i = index.getAndIncrement();
         if (i > executionOrder.size() - 1) {
             index.set(0);
         }
-        return nodeList.get(executionOrder.get(i)).mark;
+        return list.get(executionOrder.get(i));
     }
 }

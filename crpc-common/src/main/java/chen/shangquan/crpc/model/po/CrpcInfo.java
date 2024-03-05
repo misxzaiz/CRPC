@@ -9,6 +9,6 @@ public class CrpcInfo {
     private String serverName;
     private String name;
     private String desc;
-    private boolean status;
+    private Boolean status;
     private List<ServerInfo> serverList;
 }

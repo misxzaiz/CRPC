@@ -26,11 +26,16 @@ public class ServerInvoke {
             Object o = null;
             try {
                 // 参数为 object
-                o = JSONUtil.toBean((String)request.getData(), parameterTypes[0]);
+                if (request.getData() instanceof  JSONObject) {
+                    o = JSONUtil.toBean(((JSONObject)request.getData()).toString(), parameterTypes[0]);
+                } else {
+                    o = JSONUtil.toBean((String)request.getData(), parameterTypes[0]);
+                }
             } catch (JSONException e) {
                 // 参数为基本数据类型
                 o = getObject(request.getData(), o, parameterTypes[0].getSimpleName());
             } catch (ClassCastException e) {
+                e.printStackTrace();
                 try {
                     JSONObject jsonObject = (JSONObject) request.getData();
                     String serverName = (String)jsonObject.get("serverName");
