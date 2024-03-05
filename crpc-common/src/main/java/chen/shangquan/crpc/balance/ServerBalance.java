@@ -45,7 +45,6 @@ public class ServerBalance {
         List<String> serverNamePathList;
         try {
             serverNamePathList = CrpcRegisterCenter.getChildren(topPath);
-            System.out.println(serverNamePathList);
         } catch (KeeperException.NoNodeException e) {
             return new ArrayList<>();
         }
@@ -53,7 +52,6 @@ public class ServerBalance {
         for (String serverNamePath : serverNamePathList) {
             byte[] bytes = CrpcRegisterCenter.get(topPath + CrpcConstant.SEPARATOR + serverNamePath);
             String json = new String(bytes, StandardCharsets.UTF_8);
-            System.out.println(json);
             ServerInfo bean = JSONUtil.toBean(json, ServerInfo.class);
             serverList.add(bean);
         }

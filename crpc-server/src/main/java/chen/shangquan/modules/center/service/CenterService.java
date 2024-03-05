@@ -61,7 +61,6 @@ public class CenterService {
         LoadBalancing loadBalancing = BalanceMap.get(serverName);
         if (loadBalancing == null) {
             List<ServerInfo> serverList = ServerBalance.getServersByTopPath(topPath);
-            System.out.println("serverList:" + serverList);
             if (serverList.size() != 0) {
                 // 2. 选择负载均衡策略
 
@@ -122,5 +121,17 @@ public class CenterService {
         String response = NetUtils.sendHttpRequest(ip, port, request);
         JSONObject jsonObject = JSONUtil.parseObj(response);
         return jsonObject.getObj("data");
+    }
+
+    public ServerInfo getServer(ServerInfo server) throws Exception {
+        return ServerBalance.getServer(server);
+    }
+
+    public String getServerUri(ServerInfo server) throws Exception {
+        return ServerBalance.getServerUri(server);
+    }
+
+    public String getServerUri(String serverName) throws Exception {
+        return ServerBalance.getServerUri(serverName);
     }
 }

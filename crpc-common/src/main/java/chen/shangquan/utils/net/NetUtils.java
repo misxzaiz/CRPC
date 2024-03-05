@@ -9,9 +9,10 @@ import cn.hutool.json.JSONUtil;
 
 public class NetUtils {
     public static String sendHttpRequest(String uri, String requestJson) {
-        return HttpRequest.post(uri)
+        String body = HttpRequest.post(uri)
                 .body(requestJson)
                 .execute().body();
+        return body;
     }
 
     public static String sendHttpRequestWithToken(String uri, String requestJson, String token) {

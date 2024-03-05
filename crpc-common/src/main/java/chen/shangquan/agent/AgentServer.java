@@ -33,8 +33,8 @@ public class AgentServer {
     public static RpcRequest getCenterServer() {
         if (centerServer == null) {
             RpcRequest request = new RpcRequest();
-            request.setServerName("C-RPC-Client");
-            request.setClassName("CenterHandler");
+            request.setServerName("CrpcServer");
+            request.setClassName("CenterService");
             request.setMethodName("getServer");
             request.setVersion("V1");
             centerServer = request;

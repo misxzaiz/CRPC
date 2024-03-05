@@ -1,0 +1,9 @@
+server:
+  port: 8010
+
+crpc:
+  name: DemoServer
+  ip: 127.0.0.1
+  port: 8110
+  area: GD
+  weight: 5

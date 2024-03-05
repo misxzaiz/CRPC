@@ -4,6 +4,7 @@ import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.crpc.network.data.RpcResponse;
 import chen.shangquan.crpc.server.annotation.ServerRegister;
 import chen.shangquan.utils.net.NetUtils;
+import chen.shangquan.utils.type.ClassTypeUtils;
 import cn.hutool.core.bean.BeanUtil;
 
 
@@ -25,7 +26,11 @@ public class RemoteInvocationHandler implements InvocationHandler {
 
         // 返回响应结果
         // TODO 异常处理②
-        return BeanUtil.toBean(rpcResponse.getData(), returnType);
+        if (ClassTypeUtils.isBaseType(returnType)) {
+            return rpcResponse.getData();
+        }
+        Object bean = BeanUtil.toBean(rpcResponse.getData(), returnType);
+        return bean;
     }
 
     private static RpcResponse sendRequestForResponse(Method method, Object[] args) {
