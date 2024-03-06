@@ -67,7 +67,8 @@ public class WeightLoadBalancing implements LoadBalancing {
     @Override
     public ServerInfo loadBalancing() {
         int i = index.getAndIncrement();
-        if (i > executionOrder.size() - 1) {
+        // 因为 getAndIncrement 会加一
+        if (i > executionOrder.size() - 2) {
             index.set(0);
         }
         return list.get(executionOrder.get(i));

@@ -13,6 +13,10 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class ServerInvoke {
+    /**
+     * 失败重试次数
+     */
+    private static final int MAX_RETRIES = 3;
     public static RpcResponse invoke(RpcRequest request) throws InvocationTargetException, IllegalAccessException {
         Object bean = ServerMap.get(request.getClassName(), request.getVersion());
         Method[] declaredMethods = bean.getClass().getDeclaredMethods();
@@ -54,13 +58,32 @@ public class ServerInvoke {
             } catch (IllegalArgumentException illegalArgumentException) {
                 return RpcResponse.builder().id(request.getId()).code(400).message("参数不合法").build();
             }
-            try {
-                data = method.invoke(bean, o);
-            } catch (Throwable e) {
-                return RpcResponse.builder().id(request.getId()).code(400).message("服务执行异常").build();
-            }
+            // 失败重试机制
+            return invokeWithRetry(method, bean, o, request.getId());
         }
         return RpcResponse.builder().id(request.getId()).code(200).data(data).message("OK").build();
+    }
+
+
+    /**
+     * 使用策略模式实现失败重试
+     */
+    public static RpcResponse invokeWithRetry(Method method, Object bean, Object args, String requestId) {
+        for (int retry = 0; retry < MAX_RETRIES; retry++) {
+            try {
+                Object data = method.invoke(bean, args);
+                // 如果执行成功，返回结果
+                return RpcResponse.builder().id(requestId).code(200).data(data).build();
+            } catch (Throwable e) {
+                e.printStackTrace();
+                // 如果是最后一次重试，返回失败响应
+                if (retry == MAX_RETRIES - 1) {
+                    return RpcResponse.builder().id(requestId).code(400).message("服务执行异常").build();
+                }
+            }
+        }
+        // 此处理论上不会执行到
+        return null;
     }
 
     private static Object getObject(Object data, Object o, String simpleName) {

@@ -22,4 +22,12 @@ public class TestService {
         serverInfo.setArea("gduhao");
         return serverInfo;
     }
+
+    public String testException(String test) {
+        String s = "Hello, " + test + "!";
+        if (true) {
+            throw new RuntimeException();
+        }
+        return s; // 返回一个字符串
+    }
 }

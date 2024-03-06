@@ -6,6 +6,9 @@ import chen.shangquan.crpc.server.annotation.ServerRegister;
 import chen.shangquan.modules.test.impl.TestService;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Component
 @ServerRegister(className = "DemoService", version = "V1")
 public class DemoService {
@@ -14,6 +17,6 @@ public class DemoService {
         String test1 = service.test(test);
         service.testVoid("uahjd");
         ServerInfo serverInfo = service.testPo("sgdiuaoi");
-        return test1 + serverInfo;
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
     }
 }
