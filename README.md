@@ -89,7 +89,7 @@ public class F {
 | String generateUniqueIdBinary() | 生成 String 类型 2 进制 ID  |
 |    String generateUniqueId()    | 生成 String 类型 10 进制 ID |
 
-### 四、balance 负载均很
+### 四、balance 负载均衡
 
 > 确定唯一服务的标识 ip + port  
 > 权重负载均衡 weight  
