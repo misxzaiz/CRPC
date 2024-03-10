@@ -5,7 +5,7 @@
         <el-table-column prop="serverName" label="项目名" width="120">
           <template #default="scope">
             <div class="table-cell">
-              <el-link type="primary" plain @click="getServerList(scope.row)">
+              <el-link type="primary" plain @click="getServerUsed(scope.row)">
                 {{ scope.row.serverName }}
               </el-link>
             </div>
@@ -14,15 +14,8 @@
         <el-table-column prop="status" label="状态" width="80">
           <template #default="scope">
             <div class="table-cell">
-              <el-text type="success" v-if="scope.row.status">正常</el-text>
-              <el-text type="danger" v-else>停机</el-text>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="serverName" label="负载均衡" width="100">
-          <template #default="scope">
-            <div class="table-cell">
-              <el-link type="primary" plain @click="getServerBalance(scope.row)">随机</el-link>
+              <el-text type="success" v-if="scope.row.status">运行中</el-text>
+              <el-text type="danger" v-else>停止中</el-text>
             </div>
           </template>
         </el-table-column>
@@ -69,7 +62,7 @@
       </el-table>
 
       <el-table :data="po.serverPo.classList" style="width: 100%" stripe>
-        <el-table-column prop="className" label="类名" min-width="100">
+        <el-table-column prop="name" label="接口名" min-width="120">
           <template #default="scope">
             <div class="table-cell">
               <el-link type="primary" plain @click="showMethodDetail(scope.row)">
@@ -78,8 +71,9 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="path" label="类路径" min-width="160"></el-table-column>
-        <el-table-column prop="version" label="类标识" min-width="60"></el-table-column>
+        <el-table-column prop="serverName" label="服务名" min-width="120"></el-table-column>
+        <el-table-column prop="path" label="类路径" min-width="300"></el-table-column>
+        <el-table-column prop="version" label="类标识" min-width="120"></el-table-column>
       </el-table>
 
       <el-table :data="po.classList.methodList" style="width: 100%" stripe>
@@ -107,7 +101,7 @@
       <div style="width: 100%; margin-top: 20px;">
         <div style="font-size: large; font-weight: bolder;margin-bottom: 1%">
           {{ po.dealMethodPo.serverName }} -
-          {{ po.dealMethodPo.className }} -
+          {{ po.dealMethodPo.name }} -
           {{ po.dealMethodPo.methodName }} -
           {{ po.dealMethodPo.version }}
         </div>
@@ -122,9 +116,6 @@
                   :rows="6"
                   size="small"
               />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="dealMethod" size="small">执行</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -144,19 +135,20 @@
                   {{ po.dealMethodPo.result.code }}
                 </el-tag>
               </el-descriptions-item>
-              <el-descriptions-item v-else label="结果状态码">
-                <el-tag class="ml-2" type="success" size="small">0</el-tag>
-              </el-descriptions-item>
               <el-descriptions-item v-if="po.dealMethodPo.result != null" label="结果消息">
                 {{ po.dealMethodPo.result.message }}
               </el-descriptions-item>
-              <el-descriptions-item v-else label="结果消息">0
-              </el-descriptions-item>
             </el-descriptions>
           </div>
-          <div label="结果数据">
-            <el-input v-if="po.dealMethodPo.result != null" type="textarea" v-model="po.dealMethodPo.result.dataJson" placeholder="data" clearable :rows="6" size="small"/>
-            <el-input v-else type="textarea" placeholder="data" clearable :rows="6" size="small"/>
+          <div v-if="po.dealMethodPo.result != null" label="结果数据">
+            <el-input
+                type="textarea"
+                v-model="po.dealMethodPo.result.dataJson"
+                placeholder="data"
+                clearable
+                :rows="6"
+                size="small"
+            />
           </div>
         </div>
       </div>
@@ -204,7 +196,12 @@
 
 
 <script>
-import {dealMethodApi, getServerBalanceApi, getServerListApi, getTopServerListApi, setServerDetailApi} from "./api";
+import {
+  getServerListApi,
+  getServerUsedApi,
+  getTopServerListApi,
+  setServerDetailApi
+} from "./interface";
 
 export default {
   data() {
@@ -234,12 +231,12 @@ export default {
           methodList: []
         },
         methodDetail: {
-          name: null,
+          methodName: null,
           parameterList: []
         },
-        parameterList: {
+        methodArgsType: {
           name: null,
-          parameterList: [],
+          args: [],
           parameterJson: null
         },
         dealMethodPo: {
@@ -278,9 +275,9 @@ export default {
             this.list.serverList = res.data.data
           })
     },
-    getServerBalance(row) {
+    getServerUsed(row) {
       this.po.dealMethodPo.serverName = row.serverName
-      getServerBalanceApi(row.serverName)
+      getServerUsedApi(row.serverName)
           .then(res => {
             row.status = res.data.data.length !== 0;
             this.list.serverList = res.data.data
@@ -301,11 +298,11 @@ export default {
       this.po.serverPo = row
     },
     showMethod(method, row) {
-      this.po.dealMethodPo.className = row.name
+      this.po.dealMethodPo.name = row.name
       this.po.dealMethodPo.methodName = method.name
       this.po.dealMethodPo.version = row.version
       if (method.parameterList.length !== 0) {
-        let args = method.parameterList[0].parameterList
+        let args = method.parameterList[0].args
         if (args !== null) {
           this.po.dealMethodPo.data = method.parameterList[0].parameterJson
           this.po.dealMethodPo.jsonData = eval('(' + method.parameterList[0].parameterJson + ')')
@@ -318,15 +315,8 @@ export default {
       }
 
     },
-    dealMethod() {
-      dealMethodApi(this.po.dealMethodPo)
-          .then(res => {
-            this.po.dealMethodPo.result = res.data
-            this.po.dealMethodPo.result.dataJson = JSON.stringify(res.data.data, null, 2).replace(/\\n/g, '\n')
-          })
-    },
     showMethodDetail(row) {
-      this.po.dealMethodPo.className = row.name
+      this.po.dealMethodPo.name = row.name
       this.po.dealMethodPo.version = row.version
       this.po.classList = row
     },

@@ -71,12 +71,15 @@ public class ServerRegister {
 
     private static <T> ClassInfo dealServiceInterface(Class<?> aClass) {
         chen.shangquan.crpc.server.annotation.ServerRegister annotation = aClass.getAnnotation(chen.shangquan.crpc.server.annotation.ServerRegister.class);
+        String serverName = null;
         String className = null;
         String version = null;
         if (annotation != null) {
+            serverName = annotation.serverName();
             className = annotation.className();
             version = annotation.version();
         } else {
+            serverName = "";
             className = aClass.getSimpleName();
             version = DEFAULT_VERSION;
         }
@@ -124,17 +127,20 @@ public class ServerRegister {
             methodDetail.setParameterList(args);
             methodDetails.add(methodDetail);
         }
-        return new ClassInfo(className, aClass.getName().replace("." + aClass.getSimpleName(), ""), version, methodDetails);
+        return new ClassInfo(serverName, className, aClass.getName().replace("." + aClass.getSimpleName(), ""), version, methodDetails);
     }
 
     private static <T> ClassInfo dealServiceClass(Class<?> aClass) {
         chen.shangquan.crpc.server.annotation.ServerRegister annotation = aClass.getAnnotation(chen.shangquan.crpc.server.annotation.ServerRegister.class);
+        String serverName = null;
         String className = null;
         String version = null;
         if (annotation != null) {
+            serverName = annotation.serverName();
             className = annotation.className();
             version = annotation.version();
         } else {
+            serverName = "";
             className = aClass.getSimpleName();
             version = DEFAULT_VERSION;
         }
@@ -184,6 +190,6 @@ public class ServerRegister {
             methodDetail.setParameterList(args);
             methodDetails.add(methodDetail);
         }
-        return new ClassInfo(className, aClass.getName().replace("." + aClass.getSimpleName(), ""), version, methodDetails);
+        return new ClassInfo(serverName, className, aClass.getName().replace("." + aClass.getSimpleName(), ""), version, methodDetails);
     }
 }

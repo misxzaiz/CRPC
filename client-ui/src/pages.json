@@ -13,7 +13,7 @@
 			}
 		},
 		{
-			"path": "pages/client/card",
+			"path": "pages/client/interface",
 			"style": {
 				"navigationBarTitleText": "CSQ-RPC"
 			}

@@ -1,10 +1,10 @@
 <template>
   <div>
     <navigator url="/pages/client/index" hover-class="navigator-hover">
-      <button>客户端</button>
+      <button>服务注册</button>
     </navigator>
-    <navigator url="/pages/client/card" hover-class="navigator-hover">
-      <button>Card</button>
+    <navigator url="/pages/client/interface" hover-class="navigator-hover">
+      <button>服务调用</button>
     </navigator>
   </div>
 </template>
