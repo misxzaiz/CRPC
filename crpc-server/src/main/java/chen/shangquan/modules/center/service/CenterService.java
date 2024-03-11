@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author chenshangquan
+ * @date 3/11/2024
+ */
 @Component("CenterService")
 @ServerRegister(className = "CenterService", version = "V1")
 public class CenterService {
@@ -119,9 +123,9 @@ public class CenterService {
         return ServerBalance.getServer(server);
     }
 
-    public String getServerUri(ServerInfo server) throws Exception {
-        return ServerBalance.getServerUri(server);
-    }
+//    public String getServerUri(ServerInfo server) throws Exception {
+//        return ServerBalance.getServerUri(server);
+//    }
 
     public String getServerUri(String serverName) throws Exception {
         return ServerBalance.getServerUri(serverName);

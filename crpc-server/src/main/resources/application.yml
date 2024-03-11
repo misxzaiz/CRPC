@@ -6,4 +6,4 @@ crpc:
   ip: 127.0.0.1
   port: 7999
   area: GD
-  weight: 5
+  weight: 8

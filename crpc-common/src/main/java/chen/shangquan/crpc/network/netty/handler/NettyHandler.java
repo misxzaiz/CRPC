@@ -13,6 +13,8 @@ import io.netty.handler.codec.http.*;
 
 import java.nio.charset.StandardCharsets;
 
+import static chen.shangquan.crpc.network.constant.ResponseCodeConstant.SERVER_ERROR;
+
 /**
  * @author chenshangquan
  * @date 11/29/2023
@@ -29,7 +31,7 @@ public class NettyHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         try {
              invoke = ServerInvoke.invoke(request);
         } catch (Exception e) {
-            invoke = RpcResponse.builder().id(request.getId()).code(400).message("FAIL").build();
+            invoke = RpcResponse.builder().id(request.getId()).code(SERVER_ERROR).message(e.getMessage()).build();
         } finally {
             RpcRequestLocalThread.removeRpcRequest();
         }

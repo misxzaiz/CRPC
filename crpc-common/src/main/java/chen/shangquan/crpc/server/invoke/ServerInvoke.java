@@ -78,7 +78,8 @@ public class ServerInvoke {
                 e.printStackTrace();
                 // 如果是最后一次重试，返回失败响应
                 if (retry == MAX_RETRIES - 1) {
-                    return RpcResponse.builder().id(requestId).code(400).message("服务执行异常").build();
+                    throw new RuntimeException(e.getCause().toString());
+//                    return RpcResponse.builder().id(requestId).code(400).message(e.getMessage()).build();
                 }
             }
         }

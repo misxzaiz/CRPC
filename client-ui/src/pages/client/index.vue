@@ -83,7 +83,7 @@
       </el-table>
 
       <el-table :data="po.classList.methodList" style="width: 100%" stripe>
-        <el-table-column prop="name" label="方法" width="120">
+        <el-table-column prop="name" label="方法" width="150">
           <template #default="scope">
             <div class="table-cell">
               <el-link type="primary" plain @click="showMethod(scope.row, po.classList)">

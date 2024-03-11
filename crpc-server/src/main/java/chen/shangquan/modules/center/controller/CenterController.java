@@ -38,6 +38,9 @@ public class CenterController {
         // TODO NETTY发起HTTP请求，应该可以通过配置发起各种协议请求
         String res = NetUtils.sendHttpRequest(ip, port, request);
         RpcResponse bean = JSONUtil.toBean(res, RpcResponse.class);
+        if (bean.getCode() != 200) {
+            return Result.fail(bean.getMessage());
+        }
         return Result.ok(bean.getData(), bean.getMessage());
     }
 
