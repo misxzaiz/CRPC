@@ -9,4 +9,7 @@ public class CrpcConstant {
 
     public static final String INTERFACE = "interface";
     public static final String DEFAULT_VERSION = "V1";
+    public static final String AUTH = "/auth";
+    public static final String ADMIN = "/admin";
+    public static final String ADMIN_TOKEN = "/admin/token";
 }

@@ -43,6 +43,10 @@ public class CrpcRegisterCenter {
         return CuratorClient.create(path, data, CreateMode.EPHEMERAL_SEQUENTIAL);
     }
 
+    public static String create(String path, byte[] data) throws Exception {
+        return CuratorClient.create(path, data, CreateMode.PERSISTENT);
+    }
+
     public static void update(String path, byte[] data) throws Exception {
         CuratorClient.update(path, data);
     }

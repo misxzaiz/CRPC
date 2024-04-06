@@ -35,6 +35,9 @@ public class Result {
     public static Result fail(String message){
         return new Result(true,400,message,null,null,null);
     }
+    public static Result authFail(String message){
+        return new Result(true,401,message,null,null,null);
+    }
     public static Result fail(Object data,String message){
         return new Result(true,400,message,data,null,null);
     }

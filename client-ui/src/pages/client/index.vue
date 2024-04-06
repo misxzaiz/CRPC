@@ -103,7 +103,6 @@
     </div>
 
     <div class="service-list">
-
       <div style="width: 100%; margin-top: 20px;">
         <div style="font-size: large; font-weight: bolder;margin-bottom: 1%">
           {{ po.dealMethodPo.serverName }} -
@@ -186,10 +185,6 @@
   align-items: center;
 }
 
-.el-table__empty-text {
-  color: #999;
-}
-
 @media screen and (min-width: 768px) {
   .server-list {
     width: 45%;
@@ -200,11 +195,14 @@
     width: 50%;
   }
 }
+
+
 </style>
 
 
 <script>
-import {dealMethodApi, getServerBalanceApi, getServerListApi, getTopServerListApi, setServerDetailApi} from "./api";
+import {getServerBalanceApi, getServerListApi, getTopServerListApi, setServerDetailApi} from "./api";
+import {dealMethodApi} from "../../common/crpc";
 
 export default {
   data() {

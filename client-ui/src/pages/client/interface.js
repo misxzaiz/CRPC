@@ -1,5 +1,4 @@
-import {request} from "@dcloudio/uni-h5";
-import {deal} from "./api";
+import {deal} from "../../common/crpc";
 
 export function getTopServerListApi() {
     return deal("CrpcServer/InterfaceService/getTopServerList/V1", null)

@@ -6,6 +6,7 @@ import chen.shangquan.crpc.constant.CrpcConstant;
 import chen.shangquan.crpc.model.po.ServerInfo;
 import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.crpc.network.data.RpcResponse;
+import chen.shangquan.modules.auth.utils.AuthUtils;
 import chen.shangquan.utils.generator.UniqueIdGenerator;
 import chen.shangquan.utils.net.NetUtils;
 import cn.hutool.core.bean.BeanUtil;
@@ -22,6 +23,9 @@ import java.util.List;
 public class CenterController {
     @PostMapping("/dealMethod")
     public Result dealMethod(@RequestBody RpcRequest request) throws Exception {
+        if (!AuthUtils.checkAuth(request)) {
+            return Result.authFail("认证失败！");
+        }
         String topPath = CrpcConstant.TOP_PATH_SEPARATOR + request.getServerName();
         request.setId(UniqueIdGenerator.generateUniqueId());
         request.setArea("GD");
