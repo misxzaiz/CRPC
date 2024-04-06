@@ -9,6 +9,18 @@ export const dealMethodApi = (dealMethodPo) => {
         url: `${MAIN_URI}`,
         method: 'POST',
         data: dealMethodPo,
+    }).then(response => {
+        // 在这里处理响应结果
+        if (response.data.code === 401) {
+            // 执行跳转到登录页面的操作
+            uni.navigateTo({
+                url: '/pages/auth/login', // 登录页面的路径
+            }).then(r => {});
+            // 返回一个 reject 状态的 Promise，表示请求被中止
+            return Promise.reject('Unauthorized');
+        } else {
+            return response;
+        }
     });
 };
 export const dealWithToken = (uri, data, token) => {

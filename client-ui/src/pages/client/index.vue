@@ -317,6 +317,7 @@ export default {
 
     },
     dealMethod() {
+      this.po.dealMethodPo.token = uni.getStorageSync('token')
       dealMethodApi(this.po.dealMethodPo)
           .then(res => {
             this.po.dealMethodPo.result = res.data
