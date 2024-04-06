@@ -1,11 +1,9 @@
 <template>
-  <div style="background-color: #545c64;height: 1000px">
+  <div style="height: 1000px">
     <el-menu
         class="el-menu-demo"
         mode="horizontal"
-        background-color="#545c64"
-        text-color="#fff"
-        active-text-color="#ffd04b"
+
     >
       <el-menu-item index="1">
         <h1><navigator url="/pages/auth/login" >CRPC</navigator></h1>
@@ -14,9 +12,7 @@
     <el-row>
       <el-col :span="2">
         <el-menu
-            active-text-color="#ffd04b"
-            background-color="#545c64"
-            text-color="#fff"
+
             class="el-menu-vertical-demo"
             @select="handleMenuSelect"
             default-active="index"
@@ -34,7 +30,7 @@
       </el-col>
       <el-col :span="20">
         <div v-if="activeTab === 'index'">
-          <h1 style="color: white;margin: 2%;text-align: center;">首页</h1>
+          <h1 style="margin: 2%;text-align: center;">首页</h1>
         </div>
         <div v-if="activeTab === 'serverInfo'">
           <ServerInfo></ServerInfo>
