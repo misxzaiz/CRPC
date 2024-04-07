@@ -59,7 +59,7 @@ public class ServerApplicationRunner implements ApplicationRunner {
         }
     }
 
-    private String getSpringbootApplicationPackageName() {
+    public String getSpringbootApplicationPackageName() {
         String[] springbootApplication = context.getBeanNamesForAnnotation(SpringBootApplication.class);
         DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getAutowireCapableBeanFactory();
         BeanDefinition beanDefinition = beanFactory.getBeanDefinition(springbootApplication[0]);
