@@ -9,7 +9,7 @@ export function getServerListApi(serverName) {
 }
 
 export function getServerBalanceApi(serverName) {
-    return deal("CrpcServer/CenterService/getServerList/V1", serverName)
+    return deal("CrpcServer/CenterService/getServerBalance/V1", serverName)
 }
 
 export function setServerDetailApi(serverDetail) {

@@ -19,6 +19,12 @@
 			}
 		},
 		{
+			"path": "pages/client/server",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/client/interface",
 			"style": {
 				"navigationStyle": "custom"
