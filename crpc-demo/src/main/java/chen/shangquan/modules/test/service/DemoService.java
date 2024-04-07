@@ -3,7 +3,6 @@ package chen.shangquan.modules.test.service;
 import chen.shangquan.crpc.model.po.ServerInfo;
 import chen.shangquan.crpc.server.annotation.ServerRegister;
 import chen.shangquan.modules.test.impl.TestService;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -13,9 +12,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 @ServerRegister(className = "DemoService")
 public class DemoService {
-//    @RpcResource
     @Resource
-    @Lazy
     private TestService testService;
 
     public String test(String test) {

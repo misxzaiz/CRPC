@@ -1,3 +1,7 @@
+spring:
+  main:
+    lazy-initialization: true # 如果不开启这个，在注入服务时，需要添加@Lazy注解
+
 server:
   port: 8010
 
