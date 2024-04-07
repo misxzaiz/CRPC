@@ -11,6 +11,15 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column prop="serverName" label="调用" width="60">
+          <template #default="scope">
+            <div class="table-cell">
+              <el-link type="primary" plain @click="getServerUsed(scope.row)">
+                查看
+              </el-link>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="status" label="状态" width="80">
           <template #default="scope">
             <div class="table-cell">
@@ -203,6 +212,7 @@
 <script>
 import {getServerBalanceApi, getServerListApi, getTopServerListApi, setServerDetailApi} from "./api";
 import {dealMethodApi} from "../../common/crpc";
+import {getServerUsedApi} from "./interface";
 
 export default {
   data() {
@@ -262,6 +272,14 @@ export default {
     this.getTopServerList()
   },
   methods: {
+    getServerUsed(row) {
+      this.po.dealMethodPo.serverName = row.serverName
+      getServerUsedApi(row.serverName)
+          .then(res => {
+            row.status = res.data.data.length !== 0;
+            this.list.serverList = res.data.data
+          })
+    },
     getTopServerList() {
       getTopServerListApi()
           .then(res => {

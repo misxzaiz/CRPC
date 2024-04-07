@@ -3,11 +3,11 @@ spring:
     lazy-initialization: true # 如果不开启这个，在注入服务时，需要添加@Lazy注解
 
 server:
-  port: 9001
+  port: 9010
 
 crpc:
   name: DemoTwoServer
   ip: 127.0.0.1
-  port: 9101
+  port: 9110
   area: GD
-  weight: 1
+  weight: 10

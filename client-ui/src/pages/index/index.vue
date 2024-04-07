@@ -31,9 +31,9 @@
           <el-menu-item index="serverInterface">
             <span style="font-size: large;font-weight: bolder">服务调用</span>
           </el-menu-item>
-<!--          <el-menu-item index="3">-->
-<!--            <span style="font-size: large;font-weight: bolder">服务调用</span>-->
-<!--          </el-menu-item>-->
+          <el-menu-item index="server">
+            <span style="font-size: large;font-weight: bolder">服务调用</span>
+          </el-menu-item>
         </el-menu>
       </el-col>
       <el-col :span="20">
@@ -46,7 +46,7 @@
         <div v-if="activeTab === 'serverInterface'">
           <ServerInterface></ServerInterface>
         </div>
-        <div v-if="activeTab === '3'">
+        <div v-if="activeTab === 'server'">
           <Server></Server>
         </div>
       </el-col>
