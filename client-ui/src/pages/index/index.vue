@@ -34,6 +34,9 @@
           <el-menu-item index="server">
             <span style="font-size: large;font-weight: bolder">服务</span>
           </el-menu-item>
+          <el-menu-item index="serverTwo">
+            <span style="font-size: large;font-weight: bolder">服务V2</span>
+          </el-menu-item>
         </el-menu>
       </el-col>
       <el-col :span="20">
@@ -49,6 +52,9 @@
         <div v-if="activeTab === 'server'">
           <Server></Server>
         </div>
+        <div v-if="activeTab === 'serverTwo'">
+          <ServerTwo></ServerTwo>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -56,12 +62,14 @@
 
 <script>
 import Server from "../client/server.vue";
+import ServerTwo from "../client/serverTwo.vue";
 import ServerInfo from "../client/index.vue";
 import ServerInterface from "../client/interface.vue";
 
 export default {
   components: {
     Server,
+    ServerTwo,
     ServerInfo,
     ServerInterface
   },

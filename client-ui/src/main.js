@@ -4,14 +4,13 @@ import {
 import App from "./App.vue";
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css';
 export function createApp() {
 	const app = createSSRApp(App);
 	app.use(ElementPlus)
+	app.use(VXETable);
 	return {
 		app,
 	};
 }
-
-// export const MAIN_URI = "http://127.0.0.1:8000"
-
-export const MAIN_URI = "https://dominant-ant-formerly.ngrok-free.app"

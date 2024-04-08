@@ -1,26 +1,44 @@
 <template>
   <div class="container">
     <div class="server-list">
-      <el-table :data="list.serverTopList" style="width: 100%" stripe>
-        <el-table-column prop="serverName" label="项目名" width="120">
+      <el-table :data="list.searchServerTopList" style="width: 100%" stripe height="250">
+        <el-table-column sortable prop="serverName" label="服务名" width="200">
+          <template #header>
+            <el-input v-model="searchServerTopList" style="width: 80%" size="small" placeholder="Type to search" />
+          </template>
           <template #default="scope">
-            <div class="table-cell">
-              <el-link type="primary" plain @click="getServerList(scope.row)">
-                {{ scope.row.serverName }}
-              </el-link>
-            </div>
+            <el-popover effect="light" trigger="hover" placement="top" width="auto">
+              <template #default>
+                <div>名称: {{ scope.row.name }}</div>
+                <div>描述: {{ scope.row.desc }}</div>
+              </template>
+              <template #reference>
+                <el-link type="primary" plain>
+                  {{ scope.row.serverName }}
+                </el-link>
+              </template>
+            </el-popover>
           </template>
         </el-table-column>
-        <el-table-column prop="serverName" label="调用" width="60">
+        <el-table-column prop="status" label="列表" width="80">
           <template #default="scope">
             <div class="table-cell">
-              <el-link type="primary" plain @click="getServerUsed(scope.row)">
+              <el-link v-if="scope.row.status" type="primary" plain @click="getServerList(scope.row)">
                 查看
               </el-link>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" width="80">
+        <el-table-column prop="status" label="调用" width="80">
+          <template #default="scope">
+            <div class="table-cell">
+              <el-link v-if="scope.row.status" type="primary" plain @click="getServerUsed(scope.row)">
+                查看
+              </el-link>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column sortable prop="status" label="状态" width="80">
           <template #default="scope">
             <div class="table-cell">
               <el-text type="success" v-if="scope.row.status">正常</el-text>
@@ -28,15 +46,13 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="serverName" label="负载均衡" width="100">
+        <el-table-column prop="status" label="负载均衡" width="120">
           <template #default="scope">
             <div class="table-cell">
               <el-link type="primary" plain @click="getServerBalance(scope.row)">随机</el-link>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="名字" min-width="120"></el-table-column>
-        <el-table-column prop="desc" label="描述" min-width="120"></el-table-column>
         <el-table-column prop="edit" label="编辑" width="80">
           <template #default="scope">
             <div class="table-cell">
@@ -62,7 +78,7 @@
       </el-dialog>
 
       <el-table :data="list.serverList" style="width: 100%" stripe>
-        <el-table-column prop="name" label="服务名" min-width="120">
+        <el-table-column sortable prop="name" label="服务名" min-width="120">
           <template #default="scope">
             <div class="table-cell">
               <el-link type="primary" plain @click="showServerDetail(scope.row)">
@@ -71,14 +87,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="ip" label="IP" min-width="100"></el-table-column>
-        <el-table-column prop="port" label="端口号" width="80"></el-table-column>
-        <el-table-column prop="weight" label="权重" width="80"></el-table-column>
-        <el-table-column prop="area" label="区域" width="80"></el-table-column>
+        <el-table-column sortable prop="ip" label="IP" min-width="100"></el-table-column>
+        <el-table-column sortable prop="port" label="端口号" width="80"></el-table-column>
+        <el-table-column sortable prop="weight" label="权重" width="80"></el-table-column>
+        <el-table-column sortable prop="area" label="区域" width="80"></el-table-column>
       </el-table>
 
       <el-table :data="po.serverPo.classList" style="width: 100%" stripe>
-        <el-table-column prop="className" label="类名" min-width="100">
+        <el-table-column sortable prop="className" label="类名" min-width="100">
           <template #default="scope">
             <div class="table-cell">
               <el-link type="primary" plain @click="showMethodDetail(scope.row)">
@@ -87,12 +103,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="path" label="类路径" min-width="160"></el-table-column>
-        <el-table-column prop="version" label="类标识" min-width="60"></el-table-column>
+        <el-table-column sortable prop="path" label="类路径" min-width="160"></el-table-column>
+        <el-table-column sortable prop="version" label="类标识" min-width="60"></el-table-column>
       </el-table>
 
       <el-table :data="po.classList.methodList" style="width: 100%" stripe>
-        <el-table-column prop="name" label="方法" width="150">
+        <el-table-column sortable prop="name" label="方法" width="150">
           <template #default="scope">
             <div class="table-cell">
               <el-link type="primary" plain @click="showMethod(scope.row, po.classList)">
@@ -101,7 +117,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="deal" label="属性" width="120">
+        <el-table-column sortable prop="deal" label="属性" width="120">
           <template #default="scope">
             <div class="table-cell" v-if="scope.row.parameterList.length > 0">
               {{ scope.row.parameterList[0].name }}
@@ -217,7 +233,9 @@ import {getServerUsedApi} from "./interface";
 export default {
   data() {
     return {
+      searchServerTopList: '',
       list: {
+        searchServerTopList: [],
         serverTopList: [],
         serverList: [],
       },
@@ -267,6 +285,17 @@ export default {
       }
     }
   },
+  watch: {
+    searchServerTopList(newValue, oldValue) {
+      this.list.searchServerTopList = this.list.serverTopList.filter(
+          (data) =>
+              !this.searchServerTopList ||
+              (data.serverName && data.serverName.includes(newValue)) ||
+              (data.name && data.name.includes(newValue)) ||
+              (data.desc && data.desc.includes(newValue))
+      )
+    }
+  },
   onLoad() {},
   mounted() {
     this.getTopServerList()
@@ -283,6 +312,7 @@ export default {
       getTopServerListApi()
           .then(res => {
             this.list.serverTopList = res.data.data
+            this.list.searchServerTopList = this.list.serverTopList
           })
     },
     getServerList(row) {
