@@ -25,14 +25,14 @@
           <el-menu-item index="index">
             <span style="font-size: large;font-weight: bolder">首页</span>
           </el-menu-item>
-          <el-menu-item index="serverInfo">
-            <span style="font-size: large;font-weight: bolder">服务注册</span>
-          </el-menu-item>
-          <el-menu-item index="serverInterface">
-            <span style="font-size: large;font-weight: bolder">服务调用</span>
-          </el-menu-item>
+<!--          <el-menu-item index="serverInfo">-->
+<!--            <span style="font-size: large;font-weight: bolder">服务注册</span>-->
+<!--          </el-menu-item>-->
+<!--          <el-menu-item index="serverInterface">-->
+<!--            <span style="font-size: large;font-weight: bolder">服务调用</span>-->
+<!--          </el-menu-item>-->
           <el-menu-item index="server">
-            <span style="font-size: large;font-weight: bolder">服务调用</span>
+            <span style="font-size: large;font-weight: bolder">服务</span>
           </el-menu-item>
         </el-menu>
       </el-col>
