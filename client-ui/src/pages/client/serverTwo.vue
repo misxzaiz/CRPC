@@ -7,7 +7,7 @@
             <el-input v-model="searchServerTopList" style="width: 80%" size="small" placeholder="Type to search" />
           </template>
           <template #default="scope">
-            <el-popover effect="light" trigger="hover" placement="top" width="auto">
+            <el-popover trigger="hover" placement="top" width="auto">
               <template #default>
                 <div>名称: {{ scope.row.name }}</div>
                 <div>描述: {{ scope.row.desc }}</div>
@@ -77,8 +77,11 @@
         </div>
       </el-dialog>
 
-      <el-table :data="list.serverList" style="width: 100%;margin-top: 2%" stripe height="250">
-        <el-table-column sortable prop="name" label="服务名" min-width="120">
+      <el-table :data="list.searchServerList" style="width: 100%;margin-top: 2%" stripe height="250">
+        <el-table-column sortable prop="name" label="服务名" min-width="150">
+          <template #header>
+            <el-input v-model="searchServerList" style="width: 80%" size="small" placeholder="Type to search" />
+          </template>
           <template #default="scope">
             <div class="table-cell">
               <el-link type="primary" plain @click="showServerDetail(scope.row)">
@@ -87,14 +90,17 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column sortable prop="ip" label="IP" min-width="100"></el-table-column>
-        <el-table-column sortable prop="port" label="端口号" width="100"></el-table-column>
-        <el-table-column sortable prop="weight" label="权重" width="100"></el-table-column>
-        <el-table-column sortable prop="area" label="区域" width="100"></el-table-column>
+        <el-table-column sortable prop="ip" label="IP" min-width="90"></el-table-column>
+        <el-table-column sortable prop="port" label="端口号" width="90"></el-table-column>
+        <el-table-column sortable prop="weight" label="权重" width="90"></el-table-column>
+        <el-table-column sortable prop="area" label="区域" width="90"></el-table-column>
       </el-table>
 
-      <el-table :data="po.serverPo.classList" style="width: 100%;margin-top: 2%" stripe height="250">
-        <el-table-column sortable prop="className" label="类名" min-width="100">
+      <el-table :data="list.searchClassList" style="width: 100%;margin-top: 2%" stripe height="250">
+        <el-table-column sortable prop="name" label="类名" min-width="150">
+          <template #header>
+            <el-input v-model="searchClassList" style="width: 80%" size="small" placeholder="Type to search" />
+          </template>
           <template #default="scope">
             <div class="table-cell">
               <el-link type="primary" plain @click="showMethodDetail(scope.row)">
@@ -112,8 +118,11 @@
 
     <div class="service-list">
       <div>
-        <el-table :data="po.classList.methodList" style="width: 100%" stripe height="250">
+        <el-table :data="list.searchMethodList" style="width: 100%" stripe height="250">
           <el-table-column sortable prop="name" label="方法" width="150">
+            <template #header>
+              <el-input v-model="searchMethodList" style="width: 80%" size="small" placeholder="Type to search" />
+            </template>
             <template #default="scope">
               <div class="table-cell">
                 <el-link type="primary" plain @click="showMethod(scope.row, po.classList)">
@@ -238,10 +247,16 @@ export default {
   data() {
     return {
       searchServerTopList: '',
+      searchServerList: '',
+      searchClassList: '',
+      searchMethodList: '',
       list: {
         searchServerTopList: [],
         serverTopList: [],
         serverList: [],
+        searchServerList: [],
+        searchClassList: [],
+        searchMethodList: [],
       },
       po: {
         serverDetail: {
@@ -294,11 +309,40 @@ export default {
       this.list.searchServerTopList = this.list.serverTopList.filter(
           (data) =>
               !this.searchServerTopList ||
-              (data.serverName && data.serverName.includes(newValue)) ||
-              (data.name && data.name.includes(newValue)) ||
-              (data.desc && data.desc.includes(newValue))
+              (data.serverName && data.serverName.toLowerCase().includes(newValue.toLowerCase())) ||
+              (data.name && data.name.toLowerCase().includes(newValue.toLowerCase())) ||
+              (data.desc && data.desc.toLowerCase().includes(newValue.toLowerCase()))
       )
-    }
+    },
+    searchServerList(newValue, oldValue) {
+      this.list.searchServerList = this.list.serverList.filter(
+          (data) =>
+              !this.searchServerList ||
+              (data.name && data.name.toLowerCase().includes(newValue.toLowerCase())) ||
+              (data.ip && data.ip.includes(newValue)) ||
+              (data.port.toString().includes(newValue)) ||
+              (data.weight.toString().includes(newValue)) ||
+              (data.area && data.area.toLowerCase().includes(newValue.toLowerCase()))
+
+      )
+    },
+    searchClassList(newValue, oldValue) {
+      this.list.searchClassList = this.po.serverPo.classList.filter(
+          (data) =>
+              !this.searchClassList ||
+              (data.name && data.name.toLowerCase().includes(newValue.toLowerCase())) ||
+              (data.path && data.path.toLowerCase().includes(newValue.toLowerCase())) ||
+              (data.version && data.version.toLowerCase().includes(newValue.toLowerCase()))
+      )
+    },
+    searchMethodList(newValue, oldValue) {
+      this.list.searchMethodList = this.po.classList.methodList.filter(
+          (data) =>
+              !this.searchMethodList ||
+              (data.name && data.name.toLowerCase().includes(newValue.toLowerCase())) ||
+              (data.parameterList.length > 0 && data.parameterList[0].name.toLowerCase().includes(newValue.toLowerCase()))
+      )
+    },
   },
   onLoad() {},
   mounted() {
@@ -310,6 +354,7 @@ export default {
       getServerUsedApi(row.serverName)
           .then(res => {
             this.list.serverList = res.data.data
+            this.list.searchServerList = this.list.serverList
           })
     },
     getTopServerList() {
@@ -325,6 +370,7 @@ export default {
           .then(res => {
             row.status = res.data.data.length !== 0;
             this.list.serverList = res.data.data
+            this.list.searchServerList = this.list.serverList
           })
     },
     getServerBalance(row) {
@@ -348,6 +394,7 @@ export default {
     showServerDetail(row) {
       this.po.dealMethodPo.name = row.name
       this.po.serverPo = row
+      this.list.searchClassList = row.classList
     },
     showMethod(method, row) {
       this.po.dealMethodPo.className = row.name
@@ -379,6 +426,7 @@ export default {
       this.po.dealMethodPo.className = row.name
       this.po.dealMethodPo.version = row.version
       this.po.classList = row
+      this.list.searchMethodList = this.po.classList.methodList
     },
   },
 }
