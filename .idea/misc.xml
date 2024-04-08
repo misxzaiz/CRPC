@@ -11,6 +11,8 @@
       <set>
         <option value="$PROJECT_DIR$/cprc-server/pom.xml" />
         <option value="$PROJECT_DIR$/crpc-center-server/pom.xml" />
+        <option value="$PROJECT_DIR$/crpc-demo-two/pom.xml" />
+        <option value="$PROJECT_DIR$/crpc-demo2/pom.xml" />
       </set>
     </option>
   </component>

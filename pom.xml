@@ -17,8 +17,6 @@
         <module>crpc-server</module>
         <module>crpc-test</module>
         <module>crpc-demo</module>
-        <module>crpc-demo2</module>
-        <module>crpc-demo-two</module>
     </modules>
 
     <properties>
