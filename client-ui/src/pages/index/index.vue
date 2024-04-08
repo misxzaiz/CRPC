@@ -31,11 +31,11 @@
 <!--          <el-menu-item index="serverInterface">-->
 <!--            <span style="font-size: large;font-weight: bolder">服务调用</span>-->
 <!--          </el-menu-item>-->
-          <el-menu-item index="server">
-            <span style="font-size: large;font-weight: bolder">服务</span>
-          </el-menu-item>
+<!--          <el-menu-item index="server">-->
+<!--            <span style="font-size: large;font-weight: bolder">服务</span>-->
+<!--          </el-menu-item>-->
           <el-menu-item index="serverTwo">
-            <span style="font-size: large;font-weight: bolder">服务V2</span>
+            <span style="font-size: large;font-weight: bolder">服务</span>
           </el-menu-item>
         </el-menu>
       </el-col>
