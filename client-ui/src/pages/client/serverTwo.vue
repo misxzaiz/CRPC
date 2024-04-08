@@ -77,7 +77,7 @@
         </div>
       </el-dialog>
 
-      <el-table :data="list.serverList" style="width: 100%" stripe>
+      <el-table :data="list.serverList" style="width: 100%;margin-top: 2%" stripe height="250">
         <el-table-column sortable prop="name" label="服务名" min-width="120">
           <template #default="scope">
             <div class="table-cell">
@@ -88,12 +88,12 @@
           </template>
         </el-table-column>
         <el-table-column sortable prop="ip" label="IP" min-width="100"></el-table-column>
-        <el-table-column sortable prop="port" label="端口号" width="80"></el-table-column>
-        <el-table-column sortable prop="weight" label="权重" width="80"></el-table-column>
-        <el-table-column sortable prop="area" label="区域" width="80"></el-table-column>
+        <el-table-column sortable prop="port" label="端口号" width="100"></el-table-column>
+        <el-table-column sortable prop="weight" label="权重" width="100"></el-table-column>
+        <el-table-column sortable prop="area" label="区域" width="100"></el-table-column>
       </el-table>
 
-      <el-table :data="po.serverPo.classList" style="width: 100%" stripe>
+      <el-table :data="po.serverPo.classList" style="width: 100%;margin-top: 2%" stripe height="250">
         <el-table-column sortable prop="className" label="类名" min-width="100">
           <template #default="scope">
             <div class="table-cell">
@@ -107,28 +107,32 @@
         <el-table-column sortable prop="version" label="类标识" min-width="60"></el-table-column>
       </el-table>
 
-      <el-table :data="po.classList.methodList" style="width: 100%" stripe>
-        <el-table-column sortable prop="name" label="方法" width="150">
-          <template #default="scope">
-            <div class="table-cell">
-              <el-link type="primary" plain @click="showMethod(scope.row, po.classList)">
-                {{ scope.row.name }}
-              </el-link>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column sortable prop="deal" label="属性" width="120">
-          <template #default="scope">
-            <div class="table-cell" v-if="scope.row.parameterList.length > 0">
-              {{ scope.row.parameterList[0].name }}
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+
     </div>
 
     <div class="service-list">
+      <div>
+        <el-table :data="po.classList.methodList" style="width: 100%" stripe height="250">
+          <el-table-column sortable prop="name" label="方法" width="150">
+            <template #default="scope">
+              <div class="table-cell">
+                <el-link type="primary" plain @click="showMethod(scope.row, po.classList)">
+                  {{ scope.row.name }}
+                </el-link>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column sortable prop="deal" label="属性" width="120">
+            <template #default="scope">
+              <div class="table-cell" v-if="scope.row.parameterList.length > 0">
+                {{ scope.row.parameterList[0].name }}
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
       <div style="width: 100%; margin-top: 20px;">
+
         <div style="font-size: large; font-weight: bolder;margin-bottom: 1%">
           {{ po.dealMethodPo.serverName }} -
           {{ po.dealMethodPo.className }} -
