@@ -184,7 +184,13 @@ public class ObjectResolution {
         Pattern pattern1 = Pattern.compile(regex1);
         Matcher matcher1 = pattern1.matcher(result);
         String result1 = matcher1.replaceAll("");
-        return result1.replace("递归","");
+        String replace = result1.replace("递归", "");
+        // 删除最后一个换行符
+        int lastIndex = replace.lastIndexOf("\n");
+        if (lastIndex != -1) {
+            replace = replace.substring(0, lastIndex) + replace.substring(lastIndex + 1);
+        }
+        return replace;
     }
 
     public static String getObjectResolution(Class<?> tClass) {
