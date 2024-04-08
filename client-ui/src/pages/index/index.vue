@@ -10,7 +10,7 @@
       </el-menu-item>
       <div class="flex-grow" />
       <el-sub-menu index="1">
-        <template #title>Workspace</template>
+        <template #title>工作台</template>
         <el-menu-item index="1-1" @click="login">登录</el-menu-item>
         <el-menu-item index="1-2" @click="logout">注销</el-menu-item>
       </el-sub-menu>
