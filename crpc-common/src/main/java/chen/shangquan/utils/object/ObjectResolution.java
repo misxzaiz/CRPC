@@ -190,6 +190,10 @@ public class ObjectResolution {
         if (lastIndex != -1) {
             replace = replace.substring(0, lastIndex) + replace.substring(lastIndex + 1);
         }
+
+        if (!(replace.contains("{") || replace.contains("["))) {
+            return "0";
+        }
         return replace;
     }
 
