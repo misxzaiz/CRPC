@@ -239,9 +239,8 @@
 
 
 <script>
-import {getServerBalanceApi, getServerListApi, getTopServerListApi, setServerDetailApi} from "./api";
+import {getServerBalanceApi, getServerUsedApi, getServerListApi, getTopServerListApi, setServerDetailApi} from "./api";
 import {dealMethodApi} from "../../common/crpc";
-import {getServerUsedApi} from "./interface";
 
 export default {
   data() {

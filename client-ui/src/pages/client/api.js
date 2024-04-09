@@ -15,3 +15,7 @@ export function getServerBalanceApi(serverName) {
 export function setServerDetailApi(serverDetail) {
     return deal("CrpcServer/CenterService/setServerDetail/V1", serverDetail)
 }
+
+export function getServerUsedApi(serverName) {
+    return deal("CrpcServer/InterfaceService/getServerUsed/V1", serverName)
+}
