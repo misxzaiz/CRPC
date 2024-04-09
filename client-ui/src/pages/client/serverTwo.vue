@@ -204,6 +204,7 @@
 <script>
 import {getServerBalanceApi, getServerUsedApi, getServerListApi, getTopServerListApi, setServerDetailApi} from "./api";
 import {dealMethodApi} from "../../common/crpc";
+import {ElMessage} from "element-plus";
 
 export default {
   data() {
@@ -324,7 +325,11 @@ export default {
           .then(res => {
             this.list.serverTopList = res.data.data
             this.list.searchServerTopList = this.list.serverTopList
-          })
+          }).catch(e => {
+              uni.navigateTo({
+                url: '/pages/auth/login',
+              }).then(r => {});
+          });
     },
     getServerList(row) {
       this.po.dealMethodPo.serverName = row.serverName

@@ -1,17 +1,18 @@
-export const MAIN_URI = "http://127.0.0.1:8000/server/dealMethod"
-// export const MAIN_URI = "https://dominant-ant-formerly.ngrok-free.app"
-
+export const getMainUri = () => {
+    let savedServer = uni.getStorageSync('server')
+    return `${savedServer.protocol}://${savedServer.ip}:${savedServer.port}/server/dealMethod`
+}
 export const deal = (uri, data) => {
     return dealWithToken(uri, data, uni.getStorageSync('token'))
 }
 export const dealMethodApi = (dealMethodPo) => {
     return uni.request({
-        url: `${MAIN_URI}`,
+        url: getMainUri(),
         method: 'POST',
         data: dealMethodPo,
     }).then(response => {
         // 在这里处理响应结果
-        if (response.data.code === 401) {
+        if (response.data !== null && response.data.code === 401) {
             // 执行跳转到登录页面的操作
             uni.navigateTo({
                 url: '/pages/auth/login', // 登录页面的路径
@@ -26,7 +27,7 @@ export const dealMethodApi = (dealMethodPo) => {
 export const dealWithToken = (uri, data, token) => {
     const requestVo = getRequestVo(uri, data, token);
     return uni.request({
-        url: `${MAIN_URI}`,
+        url: getMainUri(),
         method: 'POST',
         data: requestVo,
     }).then(response => {

@@ -1,13 +1,13 @@
 {
 	"pages": [
 		{
-			"path": "pages/auth/login",
+			"path": "pages/index/index",
 			"style": {
 				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "pages/index/index",
+			"path": "pages/auth/login",
 			"style": {
 				"navigationStyle": "custom"
 			}

@@ -41,7 +41,7 @@
       </el-col>
       <el-col :span="20">
         <div v-if="activeTab === 'index'">
-          <h1 style="margin: 2%;text-align: center;">首页</h1>
+          <Main></Main>
         </div>
         <div v-if="activeTab === 'serverInfo'">
           <ServerInfo></ServerInfo>
@@ -65,9 +65,11 @@ import Server from "../client/server.vue";
 import ServerTwo from "../client/serverTwo.vue";
 import ServerInfo from "../client/index.vue";
 import ServerInterface from "../client/interface.vue";
+import Main from "../main/main.vue";
 
 export default {
   components: {
+    Main,
     Server,
     ServerTwo,
     ServerInfo,

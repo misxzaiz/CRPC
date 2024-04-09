@@ -10,6 +10,7 @@ export function createApp() {
 	const app = createSSRApp(App);
 	app.use(ElementPlus)
 	app.use(VXETable);
+
 	return {
 		app,
 	};
