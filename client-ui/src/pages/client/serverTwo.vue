@@ -201,43 +201,6 @@
   </div>
 </template>
 
-<style scoped>
-.container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 2%;
-}
-
-.server-list {
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.service-list {
-  width: 100%;
-}
-
-.table-cell {
-  display: flex;
-  align-items: center;
-}
-
-@media screen and (min-width: 768px) {
-  .server-list {
-    width: 45%;
-    margin-bottom: 0;
-  }
-
-  .service-list {
-    width: 50%;
-  }
-}
-
-
-</style>
-
-
 <script>
 import {getServerBalanceApi, getServerUsedApi, getServerListApi, getTopServerListApi, setServerDetailApi} from "./api";
 import {dealMethodApi} from "../../common/crpc";
@@ -378,6 +341,7 @@ export default {
           .then(res => {
             row.status = res.data.data.length !== 0;
             this.list.serverList = res.data.data
+            this.list.searchServerList = this.list.serverList
           })
     },
     editDialog(row) {
@@ -431,3 +395,38 @@ export default {
 }
 </script>
 
+<style scoped>
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 2%;
+}
+
+.server-list {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.service-list {
+  width: 100%;
+}
+
+.table-cell {
+  display: flex;
+  align-items: center;
+}
+
+@media screen and (min-width: 768px) {
+  .server-list {
+    width: 45%;
+    margin-bottom: 0;
+  }
+
+  .service-list {
+    width: 50%;
+  }
+}
+
+
+</style>
