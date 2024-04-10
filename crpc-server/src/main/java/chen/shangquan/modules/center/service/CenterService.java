@@ -178,6 +178,7 @@ public class CenterService {
                 for (RequestLog log : requestLogs) {
                     writer.write(JSONUtil.toJsonStr(log));
                     writer.newLine(); // 写入新行
+                    // TODO 其实也不一定要换行，可以通过编码减少存储空间，使用如“#REQUESTLOGS#”作为日志分隔符
                     writer.newLine(); // 写入新行
                 }
                 // 保存成功后清空 requestLogs
