@@ -37,6 +37,9 @@
           <el-menu-item index="serverTwo">
             <span style="font-size: large;font-weight: bolder">服务</span>
           </el-menu-item>
+          <el-menu-item index="requestLog">
+            <span style="font-size: large;font-weight: bolder">日志</span>
+          </el-menu-item>
         </el-menu>
       </el-col>
       <el-col :span="20">
@@ -55,6 +58,9 @@
         <div v-if="activeTab === 'serverTwo'">
           <ServerTwo></ServerTwo>
         </div>
+        <div v-if="activeTab === 'requestLog'">
+          <RequestLog></RequestLog>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -65,6 +71,7 @@ import Server from "../client/server.vue";
 import ServerTwo from "../client/serverTwo.vue";
 import ServerInfo from "../client/index.vue";
 import ServerInterface from "../client/interface.vue";
+import RequestLog from "../client/requestLog.vue";
 import Main from "../main/main.vue";
 
 export default {
@@ -73,7 +80,8 @@ export default {
     Server,
     ServerTwo,
     ServerInfo,
-    ServerInterface
+    ServerInterface,
+    RequestLog
   },
   data() {
     return {

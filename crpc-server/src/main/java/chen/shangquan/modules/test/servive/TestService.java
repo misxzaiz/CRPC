@@ -28,6 +28,7 @@ public class TestService {
     public String testException(String test) {
         log.info("TestService.testException test:{}", test);
         String s = "Hello, " + test + "!";
+        int i = 1 / 0;
         if (true) {
             throw new RuntimeException();
         }

@@ -1,8 +1,10 @@
 package chen.shangquan.crpc.server.invoke;
 
+import chen.shangquan.crpc.exp.ServerInvokeException;
 import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.crpc.network.data.RpcResponse;
 import chen.shangquan.crpc.server.map.ServerMap;
+import chen.shangquan.utils.exp.ExceptionUtils;
 import chen.shangquan.utils.type.ClassTypeUtils;
 import cn.hutool.json.JSONException;
 import cn.hutool.json.JSONObject;
@@ -10,7 +12,9 @@ import cn.hutool.json.JSONUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ServerInvoke {
     /**
@@ -69,7 +73,7 @@ public class ServerInvoke {
      * 使用策略模式实现失败重试
      */
     public static RpcResponse invokeWithRetry(Method method, Object bean, Object args, String requestId) {
-        for (int retry = 0; retry < MAX_RETRIES; retry++) {
+        for (int retry = 0; true; retry++) {
             try {
                 Object data = method.invoke(bean, args);
                 // 如果执行成功，返回结果
@@ -78,13 +82,18 @@ public class ServerInvoke {
                 e.printStackTrace();
                 // 如果是最后一次重试，返回失败响应
                 if (retry == MAX_RETRIES - 1) {
-                    throw new RuntimeException(e.getCause().toString());
+                    Throwable cause = e.getCause();
+                    List<String> exceptionMessage = new ArrayList<>();
+                    if (cause != null) {
+                        exceptionMessage = ExceptionUtils.getExceptionMessage(cause);
+                    } else {
+                        exceptionMessage = ExceptionUtils.getExceptionMessage(e);
+                    }
+                    throw new ServerInvokeException(exceptionMessage, e.getCause().toString());
 //                    return RpcResponse.builder().id(requestId).code(400).message(e.getMessage()).build();
                 }
             }
         }
-        // 此处理论上不会执行到
-        return null;
     }
 
     private static Object getObject(Object data, Object o, String simpleName) {

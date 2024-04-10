@@ -1,9 +1,8 @@
 package chen.shangquan.modules.auth.service;
 
-import chen.shangquan.common.model.po.Result;
+import chen.shangquan.result.Result;
 import chen.shangquan.crpc.center.CrpcRegisterCenter;
 import chen.shangquan.crpc.constant.CrpcConstant;
-import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.crpc.server.annotation.ServerRegister;
 import chen.shangquan.modules.auth.model.po.Auth;
 import chen.shangquan.utils.time.TimestampUtils;
@@ -12,7 +11,6 @@ import org.apache.zookeeper.KeeperException;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 @Component("AuthService")
 @ServerRegister(className = "AuthService", version = "V1")

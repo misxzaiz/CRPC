@@ -1,5 +1,6 @@
 package chen.shangquan.agent;
 
+import chen.shangquan.crpc.model.po.ServerInfo;
 import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.crpc.network.data.RpcResponse;
 import chen.shangquan.crpc.network.thread.RpcRequestLocalThread;
@@ -68,7 +69,7 @@ public class RemoteInvocationHandler implements InvocationHandler {
 
         // 获取服务uri
         // TODO 异常处理①
-        String serverUri = NetUtils.getServerUri(serverName);
+        String serverUri = NetUtils.getServerUri(request);
 
         // 发起请求
         return NetUtils.sendHttpRequest(serverUri, request, RpcResponse.class);

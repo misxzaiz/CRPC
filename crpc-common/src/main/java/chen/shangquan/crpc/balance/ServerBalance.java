@@ -3,18 +3,42 @@ package chen.shangquan.crpc.balance;
 import chen.shangquan.crpc.center.CrpcRegisterCenter;
 import chen.shangquan.crpc.constant.CrpcConstant;
 import chen.shangquan.crpc.model.po.ServerInfo;
+import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.utils.balance.BalanceMap;
 import chen.shangquan.utils.balance.LoadBalancing;
 import chen.shangquan.utils.balance.impl.WeightLoadBalancing;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.zookeeper.KeeperException;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class ServerBalance {
+
+    public static String getServerWithRpcRequest(RpcRequest request) throws Exception {
+        log.info("ServerBalance.getServerWithRpcRequest request:{}", request);
+        // TODO area 在 request 中
+        String serverName = request.getServerName();
+        String topPath = CrpcConstant.TOP_PATH_SEPARATOR + serverName;
+        LoadBalancing loadBalancing = BalanceMap.get(serverName);
+        if (loadBalancing == null) {
+            List<ServerInfo> serverList = getServersByTopPath(topPath);
+            if (serverList.size() != 0) {
+                // 2. 选择负载均衡策略
+                loadBalancing = new WeightLoadBalancing(serverList);
+                BalanceMap.put(serverName, loadBalancing);
+            } else {
+                return "";
+            }
+        }
+        ServerInfo bean = BeanUtil.toBean(loadBalancing.loadBalancing(), ServerInfo.class);
+        return bean.getIp() + ":" + bean.getPort();
+    }
+
     public static ServerInfo getServer(ServerInfo server) throws Exception {
         String serverName = server.getName();
         String topPath = CrpcConstant.TOP_PATH_SEPARATOR + serverName;

@@ -19,3 +19,7 @@ export function setServerDetailApi(serverDetail) {
 export function getServerUsedApi(serverName) {
     return deal("CrpcServer/InterfaceService/getServerUsed/V1", serverName)
 }
+
+export function getRequestLogsApi(serverName) {
+    return deal("CrpcServer/CenterService/getRequestLogs/V1", serverName)
+}

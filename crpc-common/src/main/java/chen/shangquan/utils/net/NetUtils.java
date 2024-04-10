@@ -2,6 +2,7 @@ package chen.shangquan.utils.net;
 
 import chen.shangquan.agent.AgentServer;
 import chen.shangquan.crpc.model.po.ServerInfo;
+import chen.shangquan.crpc.network.data.RequestLog;
 import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.crpc.network.data.RpcResponse;
 import cn.hutool.http.HttpRequest;
@@ -34,13 +35,29 @@ public class NetUtils {
         return JSONUtil.toBean(sendHttpRequest(uri, JSONUtil.toJsonStr(object)), clazz);
     }
 
+    public static String getServerUri(RpcRequest request) {
+        RpcResponse response = sendHttpRequest(AgentServer.getUri(),
+                AgentServer.getAgentServerJson(null, request),
+                RpcResponse.class);
+
+        return httpUri(String.valueOf(response.getData()));
+    }
+    public static void saveRequestLog(RequestLog requestLog) {
+        sendHttpRequest(AgentServer.getUri(),
+                AgentServer.getAgentServerJson("saveRequestLog", requestLog),
+                RpcResponse.class);
+    }
     public static String getServerUri(String serverName) {
         RpcResponse response = sendHttpRequest(AgentServer.getUri(),
-                AgentServer.getAgentServerJson(new ServerInfo(serverName)),
+                AgentServer.getAgentServerJson(null, new ServerInfo(serverName)),
                 RpcResponse.class);
 
         ServerInfo bean = JSONUtil.toBean(String.valueOf(response.getData()), ServerInfo.class);
         return httpUri(bean.getIp(),bean.getPort());
+    }
+
+    public static String httpUri(String uri) {
+        return "http://"+uri;
     }
 
     public static String httpUri(String ip, Integer port) {

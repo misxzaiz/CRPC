@@ -1,4 +1,4 @@
-package chen.shangquan.common.model.po;
+package chen.shangquan.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

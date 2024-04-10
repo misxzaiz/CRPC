@@ -1,6 +1,6 @@
 package chen.shangquan.modules.center.controller;
 
-import chen.shangquan.common.model.po.Result;
+import chen.shangquan.result.Result;
 import chen.shangquan.crpc.balance.ServerBalance;
 import chen.shangquan.crpc.constant.CrpcConstant;
 import chen.shangquan.crpc.model.po.ServerInfo;
@@ -9,7 +9,6 @@ import chen.shangquan.crpc.network.data.RpcResponse;
 import chen.shangquan.modules.auth.utils.AuthUtils;
 import chen.shangquan.utils.generator.UniqueIdGenerator;
 import chen.shangquan.utils.net.NetUtils;
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
