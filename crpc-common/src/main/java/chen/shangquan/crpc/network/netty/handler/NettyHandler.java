@@ -10,6 +10,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
 
@@ -19,6 +20,7 @@ import static chen.shangquan.crpc.network.constant.ResponseCodeConstant.SERVER_E
  * @author chenshangquan
  * @date 11/29/2023
  */
+@Slf4j
 public class NettyHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest fullHttpRequest) throws Exception {
@@ -26,6 +28,7 @@ public class NettyHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         ByteBuf data = fullHttpRequest.content();
         String requestJson = data.toString(StandardCharsets.UTF_8);
         RpcRequest request = JSONUtil.toBean(requestJson, RpcRequest.class);
+        log.info("NettyHandler.channelRead0:{}",request);
         RpcRequestLocalThread.saveRpcRequest(request);
         RpcResponse invoke = null;
         try {

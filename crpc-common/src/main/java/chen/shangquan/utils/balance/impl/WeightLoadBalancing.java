@@ -1,7 +1,10 @@
 package chen.shangquan.utils.balance.impl;
 
 import chen.shangquan.crpc.model.po.ServerInfo;
+import chen.shangquan.crpc.network.data.RpcRequest;
+import chen.shangquan.crpc.network.thread.RpcRequestLocalThread;
 import chen.shangquan.utils.balance.LoadBalancing;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
 public class WeightLoadBalancing implements LoadBalancing {
 
     private List<ServerInfo> list;
@@ -66,6 +70,8 @@ public class WeightLoadBalancing implements LoadBalancing {
 
     @Override
     public ServerInfo loadBalancing() {
+        RpcRequest rpcRequest = RpcRequestLocalThread.getRpcRequest();
+        log.info("WeightLoadBalancing.loadBalancing:{}",rpcRequest);
         int i = index.getAndIncrement();
         // 因为 getAndIncrement 会加一
         if (i > executionOrder.size() - 2) {

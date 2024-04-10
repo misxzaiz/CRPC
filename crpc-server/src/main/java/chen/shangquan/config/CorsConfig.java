@@ -10,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")  // 对所有接口路径都允许跨域
                 .allowedOriginPatterns("*")  // 允许指定来源的跨域请求
-                .allowedMethods("GET", "POST", "PUT", "DELETE")  // 允许的请求方法
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // 允许的请求方法
                 .allowCredentials(true);  // 允许请求携带凭据（如 Cookies）
     }
 }

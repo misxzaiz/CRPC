@@ -2,28 +2,31 @@ package chen.shangquan.modules.test.servive;
 
 import chen.shangquan.crpc.model.po.ServerInfo;
 import chen.shangquan.crpc.server.annotation.ServerRegister;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component("TestService")
 @ServerRegister(className = "TestService", version = "V1")
 public class TestService {
     public String test(String test) {
-        String s = "Hello, " + test + "!";
-        return s; // 返回一个字符串
+        log.info("TestService.test test:{}", test);
+        return "Hello, " + test + "!"; // 返回一个字符串
     }
 
     public void testVoid(String test) {
-        System.out.println("TestService + + testVoid +++");
+        log.info("TestService.testVoid test:{}", test);
     }
 
     public ServerInfo testPo(String test) {
-        System.out.println("TestService + + testVoid +++");
+        log.info("TestService.testPo test:{}", test);
         ServerInfo serverInfo = new ServerInfo();
-        serverInfo.setArea("gduhao");
+        serverInfo.setArea("testPo");
         return serverInfo;
     }
 
     public String testException(String test) {
+        log.info("TestService.testException test:{}", test);
         String s = "Hello, " + test + "!";
         if (true) {
             throw new RuntimeException();

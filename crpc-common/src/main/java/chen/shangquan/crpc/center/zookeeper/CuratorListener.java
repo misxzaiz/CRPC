@@ -1,8 +1,10 @@
 package chen.shangquan.crpc.center.zookeeper;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.*;
 
+@Slf4j
 public class CuratorListener {
     public static void create(String path) {
         CuratorFramework client = CuratorClient.getClient();
@@ -36,15 +38,15 @@ public class CuratorListener {
     }
 
     private static void create(ChildData node) {
-        System.out.println("节点创建：" + node.getPath());
+        log.info("CuratorListener.create node:{}", node);
     }
 
     private static void change(ChildData oldNode, ChildData node) {
-        System.out.println("节点修改：" + node.getPath());
+        log.info("CuratorListener.change oldNode:{} node:{}", oldNode, node);
     }
 
     private static void delete(ChildData oldNode) {
-        System.out.println("节点删除：" + oldNode.getPath());
+        log.info("CuratorListener.delete oldNode:{}", oldNode);
     }
 
     private static void initialized() {

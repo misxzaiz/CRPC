@@ -26,5 +26,10 @@ public @interface ServerRegister {
      * 版本
      */
     String version() default "V1";
+
+    /**
+     * 地区
+     */
+    String area() default "default";
 }
 
