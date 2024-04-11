@@ -22,11 +22,6 @@ public class WeightLoadBalancing implements LoadBalancing {
 
     private final List<Integer> executionOrder = new ArrayList<>();
 
-    private class Node {
-        String mark;
-        int weight;
-    }
-
     /**
      * key：mark：ip + port
      * value：weight
@@ -71,13 +66,13 @@ public class WeightLoadBalancing implements LoadBalancing {
 
     @Override
     public ServerInfo loadBalancing() {
-        RpcRequest rpcRequest = RpcRequestLocalThread.getRpcRequest();
-        log.info("WeightLoadBalancing.loadBalancing:{}",rpcRequest);
-        RpcRequest request = null;
-        // rpcRequest.getData() 中的地区才是正确的地区，因为可以在@ServerRegister注解中指定具体服务的地区，所以按外层的不一定正确
-        if (rpcRequest != null) {
-            request = BeanUtil.toBean(rpcRequest.getData(), RpcRequest.class);
-        }
+//        RpcRequest rpcRequest = RpcRequestLocalThread.getRpcRequest();
+//        log.info("WeightLoadBalancing.loadBalancing:{}",rpcRequest);
+//        RpcRequest request = null;
+//        // rpcRequest.getData() 中的地区才是正确的地区，因为可以在@ServerRegister注解中指定具体服务的地区，所以按外层的不一定正确
+//        if (rpcRequest != null) {
+//            request = BeanUtil.toBean(rpcRequest.getData(), RpcRequest.class);
+//        }
         int i = index.getAndIncrement();
         // 因为 getAndIncrement 会加一
         if (i > executionOrder.size() - 2) {

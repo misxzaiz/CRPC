@@ -6,6 +6,7 @@ import chen.shangquan.crpc.model.po.ServerInfo;
 import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.utils.balance.BalanceMap;
 import chen.shangquan.utils.balance.LoadBalancing;
+import chen.shangquan.utils.balance.impl.WeightAreaLoadBalancing;
 import chen.shangquan.utils.balance.impl.WeightLoadBalancing;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
@@ -29,7 +30,7 @@ public class ServerBalance {
             List<ServerInfo> serverList = getServersByTopPath(topPath);
             if (serverList.size() != 0) {
                 // 2. 选择负载均衡策略
-                loadBalancing = new WeightLoadBalancing(serverList);
+                loadBalancing = new WeightAreaLoadBalancing(serverList);
                 BalanceMap.put(serverName, loadBalancing);
             } else {
                 return "";
@@ -47,7 +48,7 @@ public class ServerBalance {
             List<ServerInfo> serverList = getServersByTopPath(topPath);
             if (serverList.size() != 0) {
                 // 2. 选择负载均衡策略
-                loadBalancing = new WeightLoadBalancing(serverList);
+                loadBalancing = new WeightAreaLoadBalancing(serverList);
                 BalanceMap.put(serverName, loadBalancing);
             } else {
                 return new ServerInfo();

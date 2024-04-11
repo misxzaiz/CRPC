@@ -11,6 +11,7 @@ import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.crpc.server.annotation.ServerRegister;
 import chen.shangquan.utils.balance.BalanceMap;
 import chen.shangquan.utils.balance.LoadBalancing;
+import chen.shangquan.utils.balance.impl.WeightAreaLoadBalancing;
 import chen.shangquan.utils.balance.impl.WeightLoadBalancing;
 import chen.shangquan.utils.generator.UniqueIdGenerator;
 import chen.shangquan.utils.net.NetUtils;
@@ -63,6 +64,24 @@ public class CenterService {
         return serverDetails;
     }
 
+    public ServerInfo getServerBalanceForServerInfo(String serverName) throws Exception {
+        String topPath = CrpcConstant.TOP_PATH_SEPARATOR + serverName;
+        LoadBalancing loadBalancing = BalanceMap.get(serverName);
+        if (loadBalancing == null) {
+            List<ServerInfo> serverList = ServerBalance.getServersByTopPath(topPath);
+            if (serverList.size() != 0) {
+                // 2. 选择负载均衡策略
+
+                loadBalancing = new WeightAreaLoadBalancing(serverList);
+                BalanceMap.put(serverName, loadBalancing);
+            } else {
+                return new ServerInfo();
+            }
+        }
+        ServerInfo ipPort = loadBalancing.loadBalancing();
+        return ipPort;
+    }
+
     public Object getServerBalance(String serverName) throws Exception {
         String topPath = CrpcConstant.TOP_PATH_SEPARATOR + serverName;
         LoadBalancing loadBalancing = BalanceMap.get(serverName);
@@ -71,7 +90,7 @@ public class CenterService {
             if (serverList.size() != 0) {
                 // 2. 选择负载均衡策略
 
-                loadBalancing = new WeightLoadBalancing(serverList);
+                loadBalancing = new WeightAreaLoadBalancing(serverList);
                 BalanceMap.put(serverName, loadBalancing);
             } else {
                 return new ArrayList<>();
