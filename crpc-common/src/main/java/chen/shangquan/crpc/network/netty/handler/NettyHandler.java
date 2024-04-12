@@ -41,7 +41,6 @@ public class NettyHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         String requestJson = data.toString(StandardCharsets.UTF_8);
         RpcRequest request = JSONUtil.toBean(requestJson, RpcRequest.class);
         log.info("NettyHandler.channelRead0:{}",request);
-        // TODO 记录请求日志
         RpcRequestLocalThread.saveRpcRequest(request);
         RequestLog requestLog = BeanUtil.toBean(request, RequestLog.class);
         RpcResponse invoke = null;
@@ -68,6 +67,7 @@ public class NettyHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         requestLog.setEndTime(end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
         Duration duration = Duration.between(start, end);
         long spendTimeMillis = duration.toMillis();
+        // TODO 在这里可以做一个处理，如果存在异常，或时间过长，就删除 Zookeeper 节点，降低权重，重新注册到 Zookeeper
         requestLog.setSpendTime(String.valueOf(spendTimeMillis));
         requestLog.setRpcResponse(invoke);
         log.info("NettyHandler.channelRead0 requestLog:{}", requestLog);
