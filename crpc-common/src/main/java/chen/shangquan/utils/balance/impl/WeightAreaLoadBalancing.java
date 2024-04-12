@@ -12,37 +12,86 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 public class WeightAreaLoadBalancing implements LoadBalancing {
-    private List<ServerInfo> list;
+    private final List<ServerInfo> list;
+    private final List<Integer> globalExecutionOrder = new ArrayList<>();
+    private final AtomicInteger globalIndex = new AtomicInteger(0);
     private final Map<String, List<Integer>> regionExecutionOrder = new HashMap<>();
     private final Map<String, AtomicInteger> regionIndexMap = new HashMap<>();
-    private final AtomicInteger globalIndex = new AtomicInteger(0);
     public WeightAreaLoadBalancing(List<ServerInfo> list) {
         this.list = list;
         setExecutionOrder();
     }
 
     private void setExecutionOrder() {
-        Map<String, Integer> totalRegionWeight = new HashMap<>();
 
+        // 每个服务的权重
+        Map<Integer, Integer> serviceCalls = new HashMap<>();
+        // 所有服务的总权重
+        int totalWeight = 0;
+        // 每个地区每个服务的权重
+        Map<String, Map<Integer, Integer>> regionServiceCalls = new HashMap<>();
+        // 每个地区的总权重
+        Map<String, Integer> regionTotalWeight = new HashMap<>();
         // 计算每个地区的总权重
-        for (ServerInfo server : list) {
+        for (int i = 0; i < list.size(); i++) {
+            ServerInfo server = list.get(i);
             String region = server.getArea();
             int weight = server.getWeight();
-            totalRegionWeight.put(region, totalRegionWeight.getOrDefault(region, 0) + weight);
+            serviceCalls.put(i, server.getWeight());
+            totalWeight += server.getWeight();
+            regionTotalWeight.put(region, regionTotalWeight.getOrDefault(region, 0) + weight);
+            Map<Integer, Integer> map = regionServiceCalls.get(region);
+            if (map == null) {
+                map = new HashMap<>();
+            }
+            map.put(i, weight);
+            regionServiceCalls.put(region, map);
         }
 
-        // 初始化每个地区的执行顺序和索引
-        for (String region : totalRegionWeight.keySet()) {
-            int totalWeight = totalRegionWeight.get(region);
+        // 循环生成执行顺序
+        for (int i = 0; i < totalWeight; i++) {
+            int selectedService = 1;
+            int maxCalls = 0;
+
+            // 找到当前调用次数最多的服务
+            for (Map.Entry<Integer, Integer> entry : serviceCalls.entrySet()) {
+                int service = entry.getKey();
+                int calls = entry.getValue();
+
+                if (calls > maxCalls) {
+                    maxCalls = calls;
+                    selectedService = service;
+                }
+            }
+
+            // 将选中的服务添加到执行顺序列表中
+            globalExecutionOrder.add(selectedService);
+
+            // 更新调用次数
+            serviceCalls.put(selectedService, maxCalls - 1);
+        }
+
+        for (String region : regionTotalWeight.keySet()) {
+            Integer innerTotalWeight = regionTotalWeight.get(region);
+            Map<Integer, Integer> innerServiceCalls = regionServiceCalls.get(region);
             List<Integer> executionOrder = new ArrayList<>();
-            int serverIndex = 0;
-            for (ServerInfo server : list) {
-                if (server.getArea().equals(region)) {
-                    for (int i = 0; i < server.getWeight(); i++) {
-                        executionOrder.add(serverIndex);
+            for (int i = 0; i < innerTotalWeight; i++) {
+                int selectedService = 1;
+                int maxCalls = 0;
+                // 找到当前调用次数最多的服务
+                for (Map.Entry<Integer, Integer> entry : innerServiceCalls.entrySet()) {
+                    int service = entry.getKey();
+                    int calls = entry.getValue();
+
+                    if (calls > maxCalls) {
+                        maxCalls = calls;
+                        selectedService = service;
                     }
                 }
-                serverIndex++;
+                executionOrder.add(selectedService);
+
+                // 更新调用次数
+                innerServiceCalls.put(selectedService, maxCalls - 1);
             }
             regionExecutionOrder.put(region, executionOrder);
             regionIndexMap.put(region, new AtomicInteger(0));
@@ -65,15 +114,15 @@ public class WeightAreaLoadBalancing implements LoadBalancing {
 
         if (executionOrder.isEmpty()) {
             int i = globalIndex.getAndIncrement();
-            if (i >= list.size() - 2) {
+            if (i >= list.size() - 1) {
                 globalIndex.set(0);
             }
-            ServerInfo serverInfo = list.get(i);
+            ServerInfo serverInfo = list.get(globalExecutionOrder.get(i));
             log.info("WeightLoadBalancing.loadBalancing serverInfo:{}", serverInfo);
             return serverInfo;
         } else {
             int i = index.getAndIncrement();
-            if (i >= executionOrder.size() - 2) {
+            if (i >= executionOrder.size() - 1) {
                 index.set(0);
             }
             return list.get(executionOrder.get(i));

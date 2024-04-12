@@ -83,6 +83,7 @@ public class CenterService {
     }
 
     public Object getServerBalance(String serverName) throws Exception {
+        log.info("CenterService.getServerBalance serverName:{}", serverName);
         String topPath = CrpcConstant.TOP_PATH_SEPARATOR + serverName;
         LoadBalancing loadBalancing = BalanceMap.get(serverName);
         if (loadBalancing == null) {

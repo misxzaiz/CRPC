@@ -27,7 +27,8 @@ public class CenterController {
         }
         String topPath = CrpcConstant.TOP_PATH_SEPARATOR + request.getServerName();
         request.setId(UniqueIdGenerator.generateUniqueId());
-        request.setArea("GD");
+        // TODO 从注解中获取 Area
+        request.setArea("BJ");
 //        request.setToken("c72d6319-49ab-47d7-bb4a-2ff112db4fbb");
         // TODO 使用缓存
         List<ServerInfo> serverList = ServerBalance.getServersByTopPath(topPath);
