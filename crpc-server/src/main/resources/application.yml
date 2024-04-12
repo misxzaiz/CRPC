@@ -5,15 +5,16 @@ crpc:
   name: CrpcServer
   ip: 127.0.0.1
   port: 7999
+#  area: BJ
   area: DG
   weight: 1
 
 #server:
-#  port: 8003
+#  port: 8002
 #
 #crpc:
 #  name: CrpcServer
 #  ip: 127.0.0.1
-#  port: 7997
+#  port: 7998
 #  area: BJ
-#  weight: 3
+#  weight: 2

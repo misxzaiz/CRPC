@@ -6,6 +6,7 @@ import chen.shangquan.crpc.network.NetworkServer;
 import chen.shangquan.crpc.server.ServerRegister;
 import chen.shangquan.utils.resource.CrpcConfigUtils;
 import chen.shangquan.utils.type.ClassTypeUtils;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -25,6 +26,7 @@ import java.util.List;
 public class ServerApplicationRunner implements ApplicationRunner {
     @Resource
     private ApplicationContext context;
+    public static ServerInfo APPLICATION_SERVER_INFO = null;
 
     public static List<Class<?>> getServerRegisterClasses(String packageName) throws Exception {
         List<Class<?>> classes = new ArrayList<>();
@@ -87,6 +89,7 @@ public class ServerApplicationRunner implements ApplicationRunner {
         try {
             List<Class<?>> serverRegisterClasses = getServerRegisterClasses(springbootApplicationPackageName);
             ServerInfo server = CrpcConfigUtils.getServerInfo();
+            APPLICATION_SERVER_INFO = BeanUtil.copyProperties(server, ServerInfo.class);
             // TODO 从 CrpcConfigUtils 读取 zookeeper 的连接
             CrpcRegisterCenter.connect();
             ServerRegister.registerServerClass(server, serverRegisterClasses);

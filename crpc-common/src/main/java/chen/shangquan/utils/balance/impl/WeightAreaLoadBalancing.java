@@ -3,8 +3,10 @@ package chen.shangquan.utils.balance.impl;
 import chen.shangquan.crpc.model.po.ServerInfo;
 import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.crpc.network.thread.RpcRequestLocalThread;
+import chen.shangquan.crpc.runner.ServerApplicationRunner;
 import chen.shangquan.utils.balance.LoadBalancing;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -106,9 +108,11 @@ public class WeightAreaLoadBalancing implements LoadBalancing {
         if (rpcRequest != null) {
             request = BeanUtil.toBean(rpcRequest.getData(), RpcRequest.class);
         }
+        String region = null;
+        if (request != null) {
+            region = request.getArea() != null ? request.getArea() : rpcRequest.getArea();
+        }
 
-        assert request != null;
-        String region = request.getArea() != null ? request.getArea() : rpcRequest.getArea();
         List<Integer> executionOrder = regionExecutionOrder.getOrDefault(region, Collections.emptyList());
         AtomicInteger index = regionIndexMap.getOrDefault(region, new AtomicInteger(0));
 

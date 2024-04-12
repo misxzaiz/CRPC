@@ -1,5 +1,7 @@
 package chen.shangquan.modules.center.controller;
 
+import chen.shangquan.crpc.network.thread.RpcRequestLocalThread;
+import chen.shangquan.crpc.runner.ServerApplicationRunner;
 import chen.shangquan.result.Result;
 import chen.shangquan.crpc.balance.ServerBalance;
 import chen.shangquan.crpc.constant.CrpcConstant;
@@ -9,7 +11,9 @@ import chen.shangquan.crpc.network.data.RpcResponse;
 import chen.shangquan.modules.auth.utils.AuthUtils;
 import chen.shangquan.utils.generator.UniqueIdGenerator;
 import chen.shangquan.utils.net.NetUtils;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,28 +21,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/server")
 public class CenterController {
     @PostMapping("/dealMethod")
     public Result dealMethod(@RequestBody RpcRequest request) throws Exception {
+        log.info("CenterController.dealMethod request:{}", request);
         if (!AuthUtils.checkAuth(request)) {
             return Result.authFail("认证失败！");
         }
-        String topPath = CrpcConstant.TOP_PATH_SEPARATOR + request.getServerName();
+
+        ServerInfo applicationServerInfo = ServerApplicationRunner.APPLICATION_SERVER_INFO;
+        if (StrUtil.isBlank(request.getArea()) && applicationServerInfo != null && StrUtil.isNotBlank(applicationServerInfo.getArea())) {
+            request.setArea(applicationServerInfo.getArea());
+        }
+
+        RpcRequestLocalThread.saveRpcRequest(request);
         request.setId(UniqueIdGenerator.generateUniqueId());
-        // TODO 从注解中获取 Area
-        request.setArea("BJJ");
-//        request.setToken("c72d6319-49ab-47d7-bb4a-2ff112db4fbb");
-        // TODO 使用缓存
-        List<ServerInfo> serverList = ServerBalance.getServersByTopPath(topPath);
-        if (serverList.size() == 0) {
+        String serverUri = ServerBalance.getServerUri(request.getServerName());
+        log.info("CenterController.dealMethod serverUri:{}", serverUri);
+        if (serverUri == null) {
             return Result.ok();
         }
-        // TODO 负载均衡
-        ServerInfo server = serverList.get(0);
-        String ip = server.getIp();
-        Integer port = server.getPort();
+        String[] ipPort = serverUri.split(":");
+        String ip = ipPort[0];
+        Integer port = Integer.parseInt(ipPort[1]);
+
         // TODO NETTY发起HTTP请求，应该可以通过配置发起各种协议请求
         String res = NetUtils.sendHttpRequest(ip, port, request);
         RpcResponse bean = JSONUtil.toBean(res, RpcResponse.class);

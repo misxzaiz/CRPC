@@ -51,7 +51,7 @@ public class ServerBalance {
                 loadBalancing = new WeightAreaLoadBalancing(serverList);
                 BalanceMap.put(serverName, loadBalancing);
             } else {
-                return new ServerInfo();
+                return null;
             }
         }
         return BeanUtil.toBean(loadBalancing.loadBalancing(), ServerInfo.class);
@@ -59,6 +59,9 @@ public class ServerBalance {
 
     public static String getServerUri(ServerInfo server) throws Exception {
         ServerInfo serverVo = getServer(server);
+        if (serverVo == null) {
+            return null;
+        }
         return serverVo.getIp() + ":" + serverVo.getPort();
     }
 

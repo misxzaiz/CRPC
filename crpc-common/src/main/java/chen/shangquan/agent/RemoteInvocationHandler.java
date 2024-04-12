@@ -4,6 +4,7 @@ import chen.shangquan.crpc.model.po.ServerInfo;
 import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.crpc.network.data.RpcResponse;
 import chen.shangquan.crpc.network.thread.RpcRequestLocalThread;
+import chen.shangquan.crpc.runner.ServerApplicationRunner;
 import chen.shangquan.crpc.server.annotation.ServerRegister;
 import chen.shangquan.utils.net.NetUtils;
 import chen.shangquan.utils.type.ClassTypeUtils;
@@ -57,6 +58,10 @@ public class RemoteInvocationHandler implements InvocationHandler {
             request.setArea(rpcRequest.getArea());
             request.setId(rpcRequest.getId());
             request.setToken(rpcRequest.getToken());
+        }
+        ServerInfo applicationServerInfo = ServerApplicationRunner.APPLICATION_SERVER_INFO;
+        if (applicationServerInfo != null && StrUtil.isNotBlank(applicationServerInfo.getArea())) {
+            request.setArea(applicationServerInfo.getArea());
         }
 
         log.info("RemoteInvocationHandler.sendRequestForResponse area:{}", area);
