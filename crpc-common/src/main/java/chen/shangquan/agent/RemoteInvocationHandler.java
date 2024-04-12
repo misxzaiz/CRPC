@@ -52,6 +52,8 @@ public class RemoteInvocationHandler implements InvocationHandler {
         RpcRequest rpcRequest = RpcRequestLocalThread.getRpcRequest();
         log.info("RemoteInvocationHandler.sendRequestForResponse rpcRequest:{}", rpcRequest);
         if (rpcRequest != null) {
+            // TODO 在地区的选择上，如果注解有地区，就选注解的
+            // TODO 如果注解没有，就选择配置文件的，如果配置文件没有，才选上级的
             request.setArea(rpcRequest.getArea());
             request.setId(rpcRequest.getId());
             request.setToken(rpcRequest.getToken());
