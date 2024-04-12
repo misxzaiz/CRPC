@@ -7,13 +7,13 @@ crpc:
   port: 7999
   area: DG
   weight: 8
-#
+
 #server:
-#  port: 8002
+#  port: 8003
 #
 #crpc:
 #  name: CrpcServer
 #  ip: 127.0.0.1
-#  port: 7997
+#  port: 7996
 #  area: BJ
 #  weight: 2

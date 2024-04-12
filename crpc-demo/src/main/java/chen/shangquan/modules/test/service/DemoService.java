@@ -28,7 +28,8 @@ public class DemoService {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
     }
 
-    public ServerInfo testBalance(String serverName) {
-        return centerService.getServerBalanceForServerInfo(serverName);
+    public String testBalance() {
+        testService.testVoid("");
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
     }
 }

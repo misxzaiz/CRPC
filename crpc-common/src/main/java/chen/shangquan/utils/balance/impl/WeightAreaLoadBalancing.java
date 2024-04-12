@@ -113,6 +113,7 @@ public class WeightAreaLoadBalancing implements LoadBalancing {
         AtomicInteger index = regionIndexMap.getOrDefault(region, new AtomicInteger(0));
 
         if (executionOrder.isEmpty()) {
+            log.info("全局负载均衡");
             int i = globalIndex.getAndIncrement();
             if (i >= list.size() - 1) {
                 globalIndex.set(0);
@@ -121,11 +122,14 @@ public class WeightAreaLoadBalancing implements LoadBalancing {
             log.info("WeightLoadBalancing.loadBalancing serverInfo:{}", serverInfo);
             return serverInfo;
         } else {
+
             int i = index.getAndIncrement();
             if (i >= executionOrder.size() - 1) {
                 index.set(0);
             }
-            return list.get(executionOrder.get(i));
+            ServerInfo serverInfo = list.get(executionOrder.get(i));
+            log.info("区域负载均衡 serverInfo:{}", serverInfo);
+            return serverInfo;
         }
     }
 }
