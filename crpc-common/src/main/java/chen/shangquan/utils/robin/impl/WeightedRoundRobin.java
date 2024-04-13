@@ -36,4 +36,8 @@ public class WeightedRoundRobin implements Robin {
     public String getServer(String param) {
         return null;
     }
+
+    public static void main(String[] args) {
+
+    }
 }

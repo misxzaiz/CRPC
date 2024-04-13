@@ -7,11 +7,9 @@ import chen.shangquan.utils.balance.LoadBalancing;
 import cn.hutool.core.bean.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class WeightLoadBalancing implements LoadBalancing {
@@ -20,7 +18,7 @@ public class WeightLoadBalancing implements LoadBalancing {
 
     private final AtomicInteger index = new AtomicInteger(0);
 
-    private final List<Integer> executionOrder = new ArrayList<>();
+    public final List<Integer> executionOrder = new ArrayList<>();
 
     /**
      * key：mark：ip + port
@@ -40,27 +38,48 @@ public class WeightLoadBalancing implements LoadBalancing {
             serviceCalls.put(i, server.getWeight());
             totalWeight += server.getWeight();
         }
+
+        List<Integer> preServices = new ArrayList<>();
         // 循环生成执行顺序
         for (int i = 0; i < totalWeight; i++) {
-            int selectedService = 1;
-            int maxCalls = 0;
+            // 找出权重最大的，并对比上一个是否和上一个相等，存在相等就选相等，不存在就随机
 
-            // 找到当前调用次数最多的服务
-            for (Map.Entry<Integer, Integer> entry : serviceCalls.entrySet()) {
-                int service = entry.getKey();
-                int calls = entry.getValue();
+            Map.Entry<Integer, Integer> integerIntegerEntry1 = serviceCalls.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
+            Integer value = integerIntegerEntry1.getValue();
+            List<Map.Entry<Integer, Integer>> maxEntries = serviceCalls.entrySet().stream()
+                    .filter(entry -> entry.getValue().equals(value))
+                    .collect(Collectors.toList());
 
-                if (calls > maxCalls) {
-                    maxCalls = calls;
-                    selectedService = service;
+            Map.Entry<Integer, Integer> integerIntegerEntry = null;
+            if (maxEntries.size() == 1 || preServices.size() == 0) {
+                integerIntegerEntry = maxEntries.get(0);
+            } else {
+                for (Integer preService : preServices) {
+                    List<Map.Entry<Integer, Integer>> collect = maxEntries.stream().filter(e -> Objects.equals(e.getKey(), preService)).collect(Collectors.toList());
+                    if (collect.size() != 0) {
+                        Map.Entry<Integer, Integer> integerIntegerEntry2 = collect.get(0);
+                        if (executionOrder.size() != 0) {
+                            Integer integer = executionOrder.get(executionOrder.size() - 1);
+                            Integer key = integerIntegerEntry2.getKey();
+                            if (Objects.equals(integer, key)) {
+                                continue;
+                            }
+                        }
+                        integerIntegerEntry = collect.get(0);
+                        break;
+                    }
+                }
+                if (integerIntegerEntry == null) {
+                    integerIntegerEntry = maxEntries.stream().filter(e -> !preServices.contains(e.getKey())).collect(Collectors.toList()).get(0);
                 }
             }
 
+            preServices.add(integerIntegerEntry.getKey());
             // 将选中的服务添加到执行顺序列表中
-            executionOrder.add(selectedService);
+            executionOrder.add(integerIntegerEntry.getKey());
 
             // 更新调用次数
-            serviceCalls.put(selectedService, maxCalls - 1);
+            serviceCalls.put(integerIntegerEntry.getKey(), integerIntegerEntry.getValue() - 1);
         }
     }
 
@@ -79,5 +98,20 @@ public class WeightLoadBalancing implements LoadBalancing {
             index.set(0);
         }
         return list.get(executionOrder.get(i));
+    }
+
+    public static void main(String[] args) {
+        List<ServerInfo> serverInfos = new ArrayList<>();
+        ServerInfo a = new ServerInfo();
+        a.setWeight(1);
+        serverInfos.add(a);
+        ServerInfo b = new ServerInfo();
+        b.setWeight(3);
+        serverInfos.add(b);
+        ServerInfo c = new ServerInfo();
+        c.setWeight(2);
+        serverInfos.add(c);
+        WeightLoadBalancing weightLoadBalancing = new WeightLoadBalancing(serverInfos);
+        System.out.println(weightLoadBalancing.executionOrder);
     }
 }
