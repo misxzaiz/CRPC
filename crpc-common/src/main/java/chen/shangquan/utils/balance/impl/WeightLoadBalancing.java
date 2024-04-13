@@ -48,7 +48,7 @@ public class WeightLoadBalancing implements LoadBalancing {
             Integer value = integerIntegerEntry1.getValue();
             List<Map.Entry<Integer, Integer>> maxEntries = serviceCalls.entrySet().stream()
                     .filter(entry -> entry.getValue().equals(value))
-                    .collect(Collectors.toList());
+                    .toList();
 
             Map.Entry<Integer, Integer> integerIntegerEntry = null;
             if (maxEntries.size() == 1 || preServices.size() == 0) {
@@ -70,7 +70,7 @@ public class WeightLoadBalancing implements LoadBalancing {
                     }
                 }
                 if (integerIntegerEntry == null) {
-                    integerIntegerEntry = maxEntries.stream().filter(e -> !preServices.contains(e.getKey())).collect(Collectors.toList()).get(0);
+                    integerIntegerEntry = maxEntries.stream().filter(e -> !preServices.contains(e.getKey())).toList().get(0);
                 }
             }
 
@@ -103,7 +103,7 @@ public class WeightLoadBalancing implements LoadBalancing {
     public static void main(String[] args) {
         List<ServerInfo> serverInfos = new ArrayList<>();
         ServerInfo a = new ServerInfo();
-        a.setWeight(1);
+        a.setWeight(4);
         serverInfos.add(a);
         ServerInfo b = new ServerInfo();
         b.setWeight(3);

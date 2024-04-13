@@ -1,6 +1,7 @@
 package chen.shangquan.center.modules.test.service;
 
 import chen.shangquan.crpc.model.po.ServerInfo;
+import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.crpc.server.annotation.ServerRegister;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -33,5 +34,10 @@ public class TestService {
             throw new RuntimeException();
         }
         return s; // 返回一个字符串
+    }
+
+    public RpcRequest testRequest(RpcRequest request) {
+        log.info("TestService.testRequest request:{}", request);
+        return request; // 返回一个字符串
     }
 }

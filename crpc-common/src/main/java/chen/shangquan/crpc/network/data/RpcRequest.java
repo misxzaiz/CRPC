@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -21,5 +22,6 @@ public class RpcRequest implements Serializable {
     private String version = "V1";
     private String area;
     private Object data;
+    private Map<String, Object> map;
 }
 
