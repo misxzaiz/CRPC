@@ -39,6 +39,22 @@ public class ServerApplicationRunner implements ApplicationRunner {
         File packageDir = new File(url.toURI());
         scanClasses(packageName, packageDir, classes);
 
+
+        String centerServerPath = "chen.shangquan.center";
+        try {
+            // 只有依赖了 crpc-center 模块才会加载 AuthService
+            Class<?> authServiceClass = Class.forName(centerServerPath + ".modules.auth.service.AuthService");
+            classes.add(authServiceClass);
+            Class<?> centerServiceClass = Class.forName(centerServerPath + ".modules.center.service.CenterService");
+            classes.add(centerServiceClass);
+            Class<?> interfaceServiceClass = Class.forName(centerServerPath + ".modules.center.service.InterfaceService");
+            classes.add(interfaceServiceClass);
+            Class<?> testService = Class.forName(centerServerPath + ".modules.test.service.TestService");
+            classes.add(testService);
+        } catch (Exception e) {
+            // 不处理
+        }
+
         return classes;
     }
 

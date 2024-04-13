@@ -1,7 +1,10 @@
 package chen.shangquan.agent;
 
+import chen.shangquan.crpc.model.po.ServerInfo;
 import chen.shangquan.crpc.network.data.RpcRequest;
 import chen.shangquan.crpc.network.thread.RpcRequestLocalThread;
+import chen.shangquan.crpc.runner.ServerApplicationRunner;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -16,23 +19,13 @@ import java.util.Objects;
 @Slf4j
 public class AgentServer {
     private static RpcRequest centerServer = null;
-    private static String protocol = "http";
-    private static String ip = "127.0.0.1";
-    private static int port = 7999;
-
-    public static void setIpAndPort(String ip, int port) {
-        AgentServer.ip = ip;
-        AgentServer.port = port;
-    }
-
-    public static void setProtocolAndIpAndPort(String protocol, String ip, int port) {
-        AgentServer.protocol = protocol;
-        AgentServer.ip = ip;
-        AgentServer.port = port;
-    }
 
     public static String getUri() {
-        return protocol + "://" + ip + ":" + port;
+        ServerInfo applicationServerInfo = ServerApplicationRunner.APPLICATION_SERVER_INFO;
+        if (applicationServerInfo != null && StrUtil.isNotBlank(applicationServerInfo.getCenter())) {
+            return applicationServerInfo.getCenter();
+        }
+        return "http://127.0.0.1:8000";
     }
 
     public static RpcRequest getCenterServer(String methodName) {

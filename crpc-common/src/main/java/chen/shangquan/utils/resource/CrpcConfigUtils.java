@@ -48,6 +48,7 @@ public class CrpcConfigUtils {
         server.setArea((String) crpc.get("area"));
         Integer weight = (Integer) crpc.get("weight");
         server.setWeight(weight);
+        server.setCenter((String) crpc.get("center"));
         return server;
     }
 }

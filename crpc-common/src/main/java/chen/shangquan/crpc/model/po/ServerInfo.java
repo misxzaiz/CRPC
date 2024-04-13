@@ -36,6 +36,10 @@ public class ServerInfo implements Serializable {
      */
     private String area;
     /**
+     * 中心服务地址
+     */
+    private String center;
+    /**
      * 类列表
      */
     private List<ClassInfo> classList;

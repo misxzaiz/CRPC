@@ -3,16 +3,17 @@ spring:
     lazy-initialization: true # 如果不开启这个，在注入服务时，需要添加@Lazy注解
 
 server:
-#  port: 9007
-#  port: 9008
-  port: 9009
+#  port: 9001
+#  port: 9002
+  port: 9004
 
 crpc:
   name: DemoTwoServerN
   ip: 127.0.0.1
-#  port: 9107
-#  port: 9108
-  port: 9109
-#  area: BJ
-  area: DG
-  weight: 2
+#  port: 9101
+#  port: 9102
+  port: 9104
+  area: BJ
+#  area: DG
+  weight: 4
+  center: http://127.0.0.1:7999

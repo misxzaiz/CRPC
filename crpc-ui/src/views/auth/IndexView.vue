@@ -4,13 +4,13 @@
     <h1>Welcome to your arrival!</h1>
     <div style="margin-top: 5%;">
       <el-form :model="userInfo" label-width="auto" style="max-width: 600px">
-        <el-form-item label="协议">
+        <el-form-item label="协议" v-if="rememberServer">
           <el-input v-model="server.protocol" placeholder="请输入您的协议！" />
         </el-form-item>
-        <el-form-item label="IP">
+        <el-form-item label="IP" v-if="rememberServer">
           <el-input v-model="server.ip" placeholder="请输入您的IP！" />
         </el-form-item>
-        <el-form-item label="端口">
+        <el-form-item label="端口" v-if="rememberServer">
           <el-input v-model="server.port" placeholder="请输入您的端口！" />
         </el-form-item>
         <el-form-item label="账号">
@@ -21,7 +21,7 @@
         </el-form-item>
         <el-form-item>
           <el-checkbox v-model="rememberPassword">记住密码</el-checkbox>
-          <el-checkbox v-model="rememberServer">记住服务</el-checkbox>
+          <el-checkbox v-model="rememberServer">远程服务</el-checkbox>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" class="login-btn" @click="login">登录</el-button>

@@ -4,27 +4,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.18</version>
+        <groupId>chen.shangquan</groupId>
+        <artifactId>crpc</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
-    <groupId>chen.shangquan</groupId>
-    <artifactId>crpc</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <modules>
-        <module>crpc-common</module>
-        <module>crpc-server</module>
-        <module>crpc-test</module>
-        <module>crpc-demo</module>
-        <module>crpc-center</module>
-        <module>crpc-center-demo</module>
-    </modules>
+
+    <artifactId>crpc-center-demo</artifactId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>chen.shangquan</groupId>
+            <artifactId>crpc-center</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>

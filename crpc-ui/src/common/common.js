@@ -2,7 +2,12 @@ import axios from 'axios';
 import router from "@/router/index.js";
 export const getMainUri = () => {
     let savedServer = JSON.parse(localStorage.getItem('server'))
-    return `${savedServer.protocol}://${savedServer.ip}:${savedServer.port}/server/dealMethod`
+    if (savedServer !== null) {
+        let uri = `${savedServer.protocol}://${savedServer.ip}:${savedServer.port}`
+        return `${uri}/server/dealMethod`
+    } else {
+        return `/server/dealMethod`
+    }
 }
 export const deal = (uri, data) => {
     return dealWithToken(uri, data, localStorage.getItem('token'))
