@@ -16,7 +16,7 @@ public class ServerInfo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     /**
-     * 名称
+     * 服务名称
      */
     private String name;
     /**

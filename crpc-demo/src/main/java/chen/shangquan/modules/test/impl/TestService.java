@@ -8,4 +8,5 @@ public interface TestService {
     public String test(String test);
     public void testVoid(String test);
     public ServerInfo testPo(String test);
+    public String testException(String test);
 }

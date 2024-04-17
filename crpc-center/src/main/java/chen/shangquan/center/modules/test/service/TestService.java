@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component("TestService")
-@ServerRegister(className = "TestService", version = "V1")
+@ServerRegister(className = "TestService")
 public class TestService {
     public String test(String test) {
         log.info("TestService.test test:{}", test);
-        return "Hello, " + test + "!"; // 返回一个字符串
+        return "你好, " + test + "! 这里是中心服务！"; // 返回一个字符串
     }
 
     public void testVoid(String test) {

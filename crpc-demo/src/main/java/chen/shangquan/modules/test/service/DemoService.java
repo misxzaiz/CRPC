@@ -15,17 +15,22 @@ import java.time.format.DateTimeFormatter;
 @Component
 @ServerRegister(className = "DemoService")
 public class DemoService {
+
     @Resource
     private TestService testService;
 
-    @Resource
-    private CenterService centerService;
-
     public String test(String test) {
-        String test1 = testService.test(test);
-        testService.testVoid("uahjd");
-        ServerInfo serverInfo = testService.testPo("sgdiuaoi");
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+        String testResult = testService.test(test);
+        return testResult + " " + LocalDateTime.now()
+                .format(DateTimeFormatter
+                        .ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                );
+    }
+
+    public String testException(String test) {
+        String testResult = testService.test(test);
+        testService.testException(test);
+        return testResult + " " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
     }
 
     public String testBalance() {

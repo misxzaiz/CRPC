@@ -100,18 +100,4 @@ public class WeightLoadBalancing implements LoadBalancing {
         return list.get(executionOrder.get(i));
     }
 
-    public static void main(String[] args) {
-        List<ServerInfo> serverInfos = new ArrayList<>();
-        ServerInfo a = new ServerInfo();
-        a.setWeight(4);
-        serverInfos.add(a);
-        ServerInfo b = new ServerInfo();
-        b.setWeight(3);
-        serverInfos.add(b);
-        ServerInfo c = new ServerInfo();
-        c.setWeight(2);
-        serverInfos.add(c);
-        WeightLoadBalancing weightLoadBalancing = new WeightLoadBalancing(serverInfos);
-        System.out.println(weightLoadBalancing.executionOrder);
-    }
 }

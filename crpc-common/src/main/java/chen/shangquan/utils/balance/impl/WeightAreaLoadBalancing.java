@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class WeightAreaLoadBalancing implements LoadBalancing {
@@ -19,6 +20,11 @@ public class WeightAreaLoadBalancing implements LoadBalancing {
     private final AtomicInteger globalIndex = new AtomicInteger(0);
     private final Map<String, List<Integer>> regionExecutionOrder = new HashMap<>();
     private final Map<String, AtomicInteger> regionIndexMap = new HashMap<>();
+    public void show() {
+        System.out.println(globalExecutionOrder);
+        System.out.println(regionExecutionOrder);
+    }
+
     public WeightAreaLoadBalancing(List<ServerInfo> list) {
         this.list = list;
         setExecutionOrder();
@@ -34,7 +40,7 @@ public class WeightAreaLoadBalancing implements LoadBalancing {
         Map<String, Map<Integer, Integer>> regionServiceCalls = new HashMap<>();
         // 每个地区的总权重
         Map<String, Integer> regionTotalWeight = new HashMap<>();
-        // 计算每个地区的总权重
+
         for (int i = 0; i < list.size(); i++) {
             ServerInfo server = list.get(i);
             String region = server.getArea();
@@ -50,50 +56,90 @@ public class WeightAreaLoadBalancing implements LoadBalancing {
             regionServiceCalls.put(region, map);
         }
 
+        // 计算每个地区的总权重
+        List<Integer> globalPreServices = new ArrayList<>();
         // 循环生成执行顺序
         for (int i = 0; i < totalWeight; i++) {
-            int selectedService = 1;
-            int maxCalls = 0;
+            Map.Entry<Integer, Integer> integerIntegerEntry1 = serviceCalls.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
+            Integer value = integerIntegerEntry1.getValue();
+            List<Map.Entry<Integer, Integer>> maxEntries = serviceCalls.entrySet().stream()
+                    .filter(entry -> entry.getValue().equals(value))
+                    .toList();
 
-            // 找到当前调用次数最多的服务
-            for (Map.Entry<Integer, Integer> entry : serviceCalls.entrySet()) {
-                int service = entry.getKey();
-                int calls = entry.getValue();
-
-                if (calls > maxCalls) {
-                    maxCalls = calls;
-                    selectedService = service;
+            Map.Entry<Integer, Integer> integerIntegerEntry = null;
+            if (maxEntries.size() == 1 || globalPreServices.size() == 0) {
+                integerIntegerEntry = maxEntries.get(0);
+            } else {
+                for (Integer preService : globalPreServices) {
+                    List<Map.Entry<Integer, Integer>> collect = maxEntries.stream().filter(e -> Objects.equals(e.getKey(), preService)).collect(Collectors.toList());
+                    if (collect.size() != 0) {
+                        Map.Entry<Integer, Integer> integerIntegerEntry2 = collect.get(0);
+                        if (globalExecutionOrder.size() != 0) {
+                            Integer integer = globalExecutionOrder.get(globalExecutionOrder.size() - 1);
+                            Integer key = integerIntegerEntry2.getKey();
+                            if (Objects.equals(integer, key)) {
+                                continue;
+                            }
+                        }
+                        integerIntegerEntry = collect.get(0);
+                        break;
+                    }
+                }
+                if (integerIntegerEntry == null) {
+                    integerIntegerEntry = maxEntries.stream().filter(e -> !globalPreServices.contains(e.getKey())).toList().get(0);
                 }
             }
 
+            globalPreServices.add(integerIntegerEntry.getKey());
             // 将选中的服务添加到执行顺序列表中
-            globalExecutionOrder.add(selectedService);
+            globalExecutionOrder.add(integerIntegerEntry.getKey());
 
             // 更新调用次数
-            serviceCalls.put(selectedService, maxCalls - 1);
+            serviceCalls.put(integerIntegerEntry.getKey(), integerIntegerEntry.getValue() - 1);
         }
 
         for (String region : regionTotalWeight.keySet()) {
             Integer innerTotalWeight = regionTotalWeight.get(region);
             Map<Integer, Integer> innerServiceCalls = regionServiceCalls.get(region);
             List<Integer> executionOrder = new ArrayList<>();
+            List<Integer> regionPreServices = new ArrayList<>();
             for (int i = 0; i < innerTotalWeight; i++) {
-                int selectedService = 1;
-                int maxCalls = 0;
-                // 找到当前调用次数最多的服务
-                for (Map.Entry<Integer, Integer> entry : innerServiceCalls.entrySet()) {
-                    int service = entry.getKey();
-                    int calls = entry.getValue();
+                Map.Entry<Integer, Integer> integerIntegerEntry1 = innerServiceCalls.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
+                Integer value = integerIntegerEntry1.getValue();
+                List<Map.Entry<Integer, Integer>> maxEntries = innerServiceCalls.entrySet().stream()
+                        .filter(entry -> entry.getValue().equals(value))
+                        .toList();
 
-                    if (calls > maxCalls) {
-                        maxCalls = calls;
-                        selectedService = service;
+                Map.Entry<Integer, Integer> integerIntegerEntry = null;
+                if (maxEntries.size() == 1 || regionPreServices.size() == 0) {
+                    integerIntegerEntry = maxEntries.get(0);
+                } else {
+                    for (Integer preService : regionPreServices) {
+                        List<Map.Entry<Integer, Integer>> collect = maxEntries.stream().filter(e -> Objects.equals(e.getKey(), preService)).collect(Collectors.toList());
+                        if (collect.size() != 0) {
+                            Map.Entry<Integer, Integer> integerIntegerEntry2 = collect.get(0);
+                            if (regionPreServices.size() != 0) {
+                                Integer integer = regionPreServices.get(regionPreServices.size() - 1);
+                                Integer key = integerIntegerEntry2.getKey();
+                                if (Objects.equals(integer, key)) {
+                                    continue;
+                                }
+                            }
+                            integerIntegerEntry = collect.get(0);
+                            break;
+                        }
+                    }
+                    if (integerIntegerEntry == null) {
+                        integerIntegerEntry = maxEntries.stream().filter(e -> !regionPreServices.contains(e.getKey())).toList().get(0);
                     }
                 }
-                executionOrder.add(selectedService);
+
+                regionPreServices.add(integerIntegerEntry.getKey());
+                // 将选中的服务添加到执行顺序列表中
+                executionOrder.add(integerIntegerEntry.getKey());
 
                 // 更新调用次数
-                innerServiceCalls.put(selectedService, maxCalls - 1);
+                innerServiceCalls.put(integerIntegerEntry.getKey(), integerIntegerEntry.getValue() - 1);
             }
             regionExecutionOrder.put(region, executionOrder);
             regionIndexMap.put(region, new AtomicInteger(0));

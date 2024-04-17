@@ -11,6 +11,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MethodInfo {
+    /**
+     * 方法名称
+     */
     private String name;
+    /**
+     * 方法参数列表
+     */
     private List<ParameterInfo> parameterList;
 }
