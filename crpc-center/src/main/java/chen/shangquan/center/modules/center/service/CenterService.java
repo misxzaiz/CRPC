@@ -194,11 +194,12 @@ public class CenterService {
             Path filePath = Paths.get("D:/log", fileName);
 
             try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-                for (RequestLog log : requestLogs) {
+                Iterator<RequestLog> iterator = requestLogs.iterator();
+                while(iterator.hasNext()) {
+                    RequestLog log = iterator.next();
                     writer.write(JSONUtil.toJsonStr(log));
-                    writer.newLine(); // 写入新行
-                    // TODO 其实也不一定要换行，可以通过编码减少存储空间，使用如“#REQUESTLOGS#”作为日志分隔符
-                    writer.newLine(); // 写入新行
+                    writer.newLine();
+                    iterator.remove(); // 使用Iterator的remove()方法移除元素
                 }
                 // 保存成功后清空 requestLogs
                 requestLogs.clear();

@@ -46,4 +46,11 @@ public class ServerInfo implements Serializable {
     public ServerInfo(String serverName) {
         this.name = serverName;
     }
+
+    public String toString() {
+        return
+                name + "={" +
+                "weight=" + weight +
+                ", area='" + area + "}";
+    }
 }

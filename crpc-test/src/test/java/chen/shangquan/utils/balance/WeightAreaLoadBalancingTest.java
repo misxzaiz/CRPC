@@ -12,22 +12,27 @@ public class WeightAreaLoadBalancingTest {
     public void test() {
         List<ServerInfo> list = new ArrayList<>();
         ServerInfo s1 = new ServerInfo();
+        s1.setName("A");
         s1.setWeight(1);
         s1.setArea("GD");
         list.add(s1);
         ServerInfo s2 = new ServerInfo();
+        s2.setName("B");
         s2.setWeight(2);
         s2.setArea("GD");
         list.add(s2);
         ServerInfo s3 = new ServerInfo();
+        s3.setName("C");
         s3.setWeight(3);
         s3.setArea("GD");
         list.add(s3);
         ServerInfo s4 = new ServerInfo();
+        s4.setName("D");
         s4.setWeight(4);
         s4.setArea("SH");
         list.add(s4);
         ServerInfo s5 = new ServerInfo();
+        s5.setName("E");
         s5.setWeight(5);
         s5.setArea("SH");
         list.add(s5);

@@ -3,14 +3,14 @@ spring:
     lazy-initialization: true # 如果不开启这个，在注入服务时，需要添加@Lazy注解
 
 server:
-  port: 9005
+  port: 7005
 #  port: 9002
 #  port: 9004
 
 crpc:
-  name: DemoServer
+  name: TestServer
   ip: 127.0.0.1
-  port: 9105
+  port: 7105
 #  port: 9102
 #  port: 9104
 #  area: BJ

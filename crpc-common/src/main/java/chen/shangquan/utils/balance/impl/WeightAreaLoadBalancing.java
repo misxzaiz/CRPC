@@ -21,8 +21,9 @@ public class WeightAreaLoadBalancing implements LoadBalancing {
     private final Map<String, List<Integer>> regionExecutionOrder = new HashMap<>();
     private final Map<String, AtomicInteger> regionIndexMap = new HashMap<>();
     public void show() {
-        System.out.println(globalExecutionOrder);
-        System.out.println(regionExecutionOrder);
+        System.out.println("服务列表：" + list);
+        System.out.println("全服务执行顺序：" + globalExecutionOrder);
+        System.out.println("各区域服务执行顺序：" + regionExecutionOrder);
     }
 
     public WeightAreaLoadBalancing(List<ServerInfo> list) {
@@ -164,12 +165,12 @@ public class WeightAreaLoadBalancing implements LoadBalancing {
 
         if (executionOrder.isEmpty()) {
             int i = globalIndex.getAndIncrement();
-            log.info("全局负载均衡 i:{}", i);
+//            log.info("全局负载均衡 i:{}", i);
             if (i >= globalExecutionOrder.size() - 1) {
                 globalIndex.set(0);
             }
             ServerInfo serverInfo = list.get(globalExecutionOrder.get(i));
-            log.info("WeightLoadBalancing.loadBalancing serverInfo:{}", serverInfo);
+//            log.info("WeightLoadBalancing.loadBalancing serverInfo:{}", serverInfo);
             return serverInfo;
         } else {
 
@@ -177,8 +178,9 @@ public class WeightAreaLoadBalancing implements LoadBalancing {
             if (i >= executionOrder.size() - 1) {
                 index.set(0);
             }
-            ServerInfo serverInfo = list.get(executionOrder.get(i));
-            log.info("区域负载均衡 serverInfo:{}", serverInfo);
+            Integer integer = executionOrder.get(i);
+            ServerInfo serverInfo = list.get(integer);
+//            log.info("区域负载均衡 serverInfo:{}", serverInfo);
             return serverInfo;
         }
     }

@@ -17,7 +17,7 @@ crpc:
   name: CrpcServer
   ip: 127.0.0.1
   port: 7999
-  area: DG
+  area: GD
 #  area: BJ
 #  area: BJJ
   weight: 2
